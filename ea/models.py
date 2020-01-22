@@ -12,3 +12,7 @@ class Push(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Item(models.Model):
+    text = models.TextField()
