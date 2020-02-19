@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -139,3 +139,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 PUSH_PRIVATE_KEY = 'tSn4g1F6RH5l-yvmEjk_InrQmaAVhQ4osiDHO_zRakk'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
