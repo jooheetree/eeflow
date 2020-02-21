@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
     'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
 
     'ea',
+    'employee',
 
 ]
 
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'eeflow.urls'
@@ -141,3 +144,7 @@ STATIC_URL = '/static/'
 PUSH_PRIVATE_KEY = 'tSn4g1F6RH5l-yvmEjk_InrQmaAVhQ4osiDHO_zRakk'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# AUTH_USER_MODEL = ''
+# AUTH_USER_MODEL = 'users.CustomUser'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True

@@ -96,8 +96,8 @@ class EaModelTest(TestCase):
 
         self.client.force_login(self.user)
         self.document_create()
-        self.attachment_create('/attachment/test1.jpg')
-        self.attachment_create('/attachment/test2.jpg')
+        self.attachment_create('test1', 20, '/attachment/test1.jpg')
+        self.attachment_create('test2', 20, '/attachment/test2.jpg')
         self.sign_create(self.supervisor1, 1)
         self.sign_create(self.supervisor2, 2)
         self.sign_create(self.supervisor3, 3)
@@ -114,9 +114,11 @@ class EaModelTest(TestCase):
             sign_list=self.sign_list
         )
 
-    def attachment_create(self, path: str) -> None:
+    def attachment_create(self, title: str, size: int, path: str) -> None:
         return Attachment.objects.create(
             document=Document.objects.first(),
+            title=title,
+            size=size,
             path=settings.MEDIA_URL + path
         )
 

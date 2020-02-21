@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 API_TITLE = 'Blog API'
 API_DESCRIPTION = 'A Web API for create and edit blog'
@@ -25,8 +27,9 @@ schema_view = get_swagger_view(title=API_TITLE)
 
 urlpatterns = [
     path('ea/', include('ea.urls')),
+    path('employee/', include('employee.urls')),
     path('admin/', admin.site.urls),
     path('rest-auth/', include('rest_auth.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('swagger-docs/', schema_view),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
