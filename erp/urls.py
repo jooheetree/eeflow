@@ -13,19 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from rest_framework_swagger.views import get_swagger_view
+from django.urls import path
 
-from ea.views import send_push, create_document
-
-API_TITLE = 'Blog API'
-API_DESCRIPTION = 'A Web API for create and edit blog'
-
-schema_view = get_swagger_view(title=API_TITLE)
-
+from erp.views import voucher_list
 
 urlpatterns = [
-    path('push/', send_push, name='send_push'),
-    path('create_document/', create_document, name='create_document'),
+    path('voucher_list/', voucher_list, name='voucher_list'),
 ]

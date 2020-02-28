@@ -76,7 +76,6 @@ class Document(TimeStampedModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='document')
     title = models.CharField(max_length=255)
-    content = models.TextField()
     delete_state = models.CharField(
         max_length=2,
         choices=DELETE_STATE_CHOICES,

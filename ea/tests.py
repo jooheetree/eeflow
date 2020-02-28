@@ -3,7 +3,10 @@ from django.contrib.auth.models import User, Group
 from django.test import TestCase
 from django.test import Client
 from django.utils import timezone
+from rest_framework.response import Response
+from rest_framework.test import APIClient
 
+from employee.models import Position, Department
 from .models import Push, Document, Attachment, Sign
 from pywebpush import webpush
 
@@ -104,13 +107,11 @@ class EaModelTest(TestCase):
 
     def document_create(self) -> None:
         self.title = '업무종결보고서'
-        self.content = '최선을 다했습니다'
         self.sign_list = '이철용->윤주영'
         return Document.objects.create(
             author=self.user,
             group=self.group,
             title=self.title,
-            content=self.content,
             sign_list=self.sign_list
         )
 
@@ -152,7 +153,6 @@ class EaModelTest(TestCase):
     def test_document_create(self):
         document = Document.objects.first()
         self.assertEqual(document.title, self.title)
-        self.assertEqual(document.content, self.content)
         self.assertEqual(document.sign_list, self.sign_list)
         self.assertEqual(document.get_doc_status_display(), '결재대기중')
 
@@ -202,3 +202,45 @@ class EaModelTest(TestCase):
         sign.document.finish_deny('[push] 반려요!')
         return sign
 
+
+class EaViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(username='seungwoo')
+        self.user.set_password('seungwoo')
+        self.user.first_name = '이승우'
+        self.user.save()
+
+        self.user.employee.position = Position.objects.first()
+        self.user.employee.department = Department.objects.first()
+        self.user.save()
+        self.token: str = self.login()
+
+        self.drf_client = APIClient()
+        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+
+    def login(self):
+        response = self.client.post('/rest-auth/login/',data={
+            "username": "seungwoo",
+            "password": "seungwoo",
+        })
+        return response.data['key']
+
+    def test_create_document_view(self):
+        response: Response = self.client.post('/ea/create_document/', data={
+            'username': 'admin',
+            'title': '비료사업부 12월 고용보험료/7',
+            'files': [
+                {'title': 'test1', 'size': 10, 'path': '/attachment/test1.jpg'},
+                {'title': 'test2', 'size': 20, 'path': '/attachment/test2.jpg'}
+            ],
+            'approvers': [
+                'swl21803',
+                'cyl20605',
+            ]
+        })
+        self.assertEqual(response.status_code, 200)
+        # self.assertEqual(response.data.get('token'), self.token)
+        # self.assertEqual(response.data.get('user').get('username'), 'seungwoo')
+        # self.assertEqual(response.data.get('user').get('first_name'), '이승우')
+        # self.assertEqual(response.data.get('department').get('name'), '[사료]경영지원팀')
+        # self.assertEqual(response.data.get('position').get('name'), '사원')

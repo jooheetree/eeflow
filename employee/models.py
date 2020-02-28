@@ -16,15 +16,23 @@ POSITION_ORDER = [
     {'name': '부사장', 'order': 90},
     {'name': '사장', 'order': 100},
     {'name': '회장', 'order': 110},
+    {'name': '조장', 'order': 120},
 ]
 
 DEPARTMENT_ORDER = [
-    {'name': '[사료]경영지원팀', 'order': 10},
-    {'name': '[사료]전산팀', 'order': 20},
-    {'name': '[사료]구매팀', 'order': 30},
-    {'name': '[사료]생산팀', 'order': 40},
-    {'name': '[사료]영업팀', 'order': 50},
-    {'name': '[식품]영업팀', 'order': 60},
+    {'name': '[사료]경영지원팀', 'order': 310},
+    {'name': '[사료]전산팀', 'order': 320},
+    {'name': '[사료]구매팀', 'order': 330},
+    {'name': '[사료]생산팀', 'order': 340},
+    {'name': '[사료]영업팀', 'order': 350},
+    {'name': '[사료]연구개발팀', 'order': 360},
+    {'name': '[사료]임원', 'order': 370},
+
+    {'name': '[식품]관리팀', 'order': 210},
+    {'name': '[식품]생산팀', 'order': 220},
+    {'name': '[식품]영업팀', 'order': 230},
+    {'name': '[식품]기획팀', 'order': 240},
+    {'name': '[식품]임원', 'order': 250},
 ]
 
 
@@ -32,10 +40,16 @@ class Department(models.Model):
     name = models.CharField(max_length=50)
     order = models.PositiveSmallIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Position(models.Model):
     name = models.CharField(max_length=50)
     order = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.name
 
 
 class Employee(models.Model):
@@ -49,6 +63,9 @@ class Employee(models.Model):
     def get_order(self):
         pass
         # return POSITION_ORDER[self.position]
+
+    def __str__(self):
+        return f'{self.department} {self.user.first_name} {self.position}'
 
 
 @receiver(post_save, sender=User)

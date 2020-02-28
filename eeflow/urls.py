@@ -28,6 +28,7 @@ schema_view = get_swagger_view(title=API_TITLE)
 urlpatterns = [
     path('ea/', include('ea.urls')),
     path('employee/', include('employee.urls')),
+    path('erp/', include('erp.urls')),
     path('admin/', admin.site.urls),
     path('rest-auth/', include('rest_auth.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
