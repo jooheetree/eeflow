@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 
-from ea.views import send_push, create_document
+from ea.views import send_push, CreateDocument
 
 API_TITLE = 'Blog API'
 API_DESCRIPTION = 'A Web API for create and edit blog'
@@ -27,5 +27,5 @@ schema_view = get_swagger_view(title=API_TITLE)
 
 urlpatterns = [
     path('push/', send_push, name='send_push'),
-    path('create_document/', create_document, name='create_document'),
+    path('create_document/', CreateDocument.as_view(), name='create_document'),
 ]

@@ -1,15 +1,17 @@
+import json
+
 from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
-from employee.models import Position, Department
-from .models import Push, Document, Attachment, Sign
+from employee.models import Position, Department, Employee, POSITION_ORDER, DEPARTMENT_ORDER
+from .models import Push, Document, Attachment, Sign, DefaulSignList, SIGN_TYPE
 from pywebpush import webpush
-
 
 # class HomePageTest(TestCase):
 #
@@ -49,16 +51,45 @@ P256dh = 'BG15pJmeP6bZ1uEk1mFTyazB-wb8sgwRstPbXYeTaBWTtNHw5cHU1MBcx2P_5oJ1Ii_4uk
 AUTH = 'pd-7EmXSFy_6Y72NaK5aCA'
 
 
-def create_push_data(user: User) -> Push:
-    return Push.objects.create(
-        user=user,
-        endpoint=ENDPOINT,
-        p256dh=P256dh,
-        auth=AUTH
-    )
+class InitData:
+    def create_push_data(self, user: User) -> Push:
+        return Push.objects.create(
+            user=user,
+            endpoint=ENDPOINT,
+            p256dh=P256dh,
+            auth=AUTH
+        )
+
+    def user_create(self, username: str, password: str, first_name: str,
+                    department: str = '', position: str = '') -> User:
+        user = User.objects.create(
+            username=username,
+            password=password,
+            first_name=first_name
+        )
+        user.employee.position = Position.objects.first()
+        user.employee.department = Department.objects.first()
+        user.save()
+        self.create_push_data(user)
+        return user
+
+    def login(self, client) -> str:
+        response = client.post('/rest-auth/login/', data={
+            "username": "swl21803",
+            "password": "swl21803",
+        })
+        return response.data['key']
+
+    def position_create(self):
+        for position in POSITION_ORDER:
+            Position(**position).save()
+
+    def department_create(self):
+        for department in DEPARTMENT_ORDER:
+            Department(**department).save()
 
 
-class PushTest(TestCase):
+class PushTest(InitData, TestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create(
@@ -66,11 +97,10 @@ class PushTest(TestCase):
             password='testuser'
         )
         self.client.force_login(self.user)
-
         self.endpoint = ENDPOINT
         self.p256dh = P256dh
         self.auth = AUTH
-        self.push = create_push_data(self.user)
+        self.push = self.create_push_data(self.user)
 
     def test_saving_data(self):
         self.assertEqual(self.push.user, self.user)
@@ -83,34 +113,43 @@ class PushTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class EaModelTest(TestCase):
+class EaTest(InitData, TestCase):
     """
     사용자 결재 상신 시 사용되는 Model(Document, Attachment, Sign) 테스트
     """
 
     def setUp(self) -> None:
-        self.group = Group.objects.create(
-            name='전산팀'
-        )
-        self.user = self.user_create('testuser', 'testuser')
-        self.supervisor1 = self.user_create('supervisor1', 'supervisor1')
-        self.supervisor2 = self.user_create('supervisor2', 'supervisor2')
-        self.supervisor3 = self.user_create('supervisor3', 'supervisor3')
+        self.position_create()
+        self.department_create()
+
+        self.user = self.user_create('swl21803', 'swl21803', '이승우')
+        self.user.set_password('swl21803')
+        self.user.save()
+
+        self.supervisor1 = self.user_create('cyl20509', 'cyl20509', '이철용')
+        self.supervisor2 = self.user_create('jyy20510', 'jyy20510', '윤주영')
+        self.supervisor3 = self.user_create('hck18106', 'hck18106', '김희철')
 
         self.client.force_login(self.user)
+
         self.document_create()
+
         self.attachment_create('test1', 20, '/attachment/test1.jpg')
         self.attachment_create('test2', 20, '/attachment/test2.jpg')
-        self.sign_create(self.supervisor1, 1)
-        self.sign_create(self.supervisor2, 2)
-        self.sign_create(self.supervisor3, 3)
+
+        self.sign_create(self.supervisor1, 0)
+        self.sign_create(self.supervisor2, 1)
+        self.sign_create(self.supervisor3, 2)
+
+        self.defaulsignlist_create(self.user, self.supervisor1.employee, 0)
+        self.defaulsignlist_create(self.user, self.supervisor2.employee, 0)
+        self.defaulsignlist_create(self.user, self.supervisor3.employee, 0)
 
     def document_create(self) -> None:
         self.title = '업무종결보고서'
         self.sign_list = '이철용->윤주영'
         return Document.objects.create(
             author=self.user,
-            group=self.group,
             title=self.title,
             sign_list=self.sign_list
         )
@@ -132,23 +171,12 @@ class EaModelTest(TestCase):
             result=result
         )
 
-    def user_create(self, username: str, password: str) -> User:
-        user = User.objects.create(
-            username=username,
-            password=password,
+    def defaulsignlist_create(self, user: User, approver: Employee, type: SIGN_TYPE = 0) -> None:
+        return DefaulSignList.objects.create(
+            user=user,
+            approver=approver,
+            type=type
         )
-
-        create_push_data(user)
-        return user
-
-    def test_user_group(self):
-        document = Document.objects.first()
-        push_data = Push.objects.get(user=self.user)
-        self.user.groups.add(self.group)
-        self.assertEqual(self.user.groups.first(), self.group)
-        self.assertEqual(self.user.document.first(), document)
-        self.assertEqual(self.group.document.first(), document)
-        self.assertEqual(self.user.push_data.first(), push_data)
 
     def test_document_create(self):
         document = Document.objects.first()
@@ -173,6 +201,10 @@ class EaModelTest(TestCase):
         self.assertEqual(sign.get_result_display(), '대기중')
         self.assertEqual(sign.get_type_display(), '결재')
         self.assertIsInstance(sign.user, User)
+
+    def test_defaulsignlist_create(self):
+        for defaulSignList in DefaulSignList.objects.all():
+            self.assertEqual(defaulSignList.user, self.user)
 
     def test_sign_after_approve(self):
         sign = self.approve_sign(Sign.objects.get(seq=1))
@@ -202,45 +234,30 @@ class EaModelTest(TestCase):
         sign.document.finish_deny('[push] 반려요!')
         return sign
 
-
-class EaViewTest(TestCase):
-    def setUp(self) -> None:
-        self.user = User.objects.create(username='seungwoo')
-        self.user.set_password('seungwoo')
-        self.user.first_name = '이승우'
-        self.user.save()
-
-        self.user.employee.position = Position.objects.first()
-        self.user.employee.department = Department.objects.first()
-        self.user.save()
-        self.token: str = self.login()
-
-        self.drf_client = APIClient()
-        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-
-    def login(self):
-        response = self.client.post('/rest-auth/login/',data={
-            "username": "seungwoo",
-            "password": "seungwoo",
-        })
-        return response.data['key']
-
     def test_create_document_view(self):
-        response: Response = self.client.post('/ea/create_document/', data={
-            'username': 'admin',
-            'title': '비료사업부 12월 고용보험료/7',
-            'files': [
-                {'title': 'test1', 'size': 10, 'path': '/attachment/test1.jpg'},
-                {'title': 'test2', 'size': 20, 'path': '/attachment/test2.jpg'}
-            ],
-            'approvers': [
-                'swl21803',
-                'cyl20605',
-            ]
-        })
-        self.assertEqual(response.status_code, 200)
-        # self.assertEqual(response.data.get('token'), self.token)
-        # self.assertEqual(response.data.get('user').get('username'), 'seungwoo')
-        # self.assertEqual(response.data.get('user').get('first_name'), '이승우')
-        # self.assertEqual(response.data.get('department').get('name'), '[사료]경영지원팀')
-        # self.assertEqual(response.data.get('position').get('name'), '사원')
+        """
+        create Document View Test
+        """
+        token: str = self.login(self.client)
+        self.drf_client = APIClient()
+        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        image1 = settings.MEDIA_ROOT + "/test/3.png"
+        pdf1 = settings.MEDIA_ROOT + "/test/test.pdf"
+        upload_img1 = SimpleUploadedFile("test1.png", content=open(image1, "rb").read())
+        upload_pdf1 = SimpleUploadedFile("pdf1.pdf", content=open(pdf1, "rb").read())
+        approvers = [
+            {"username": "cyl20509", "type": 0},
+            {"username": "jyy20510", "type": 0},
+            {"username": "hck18106", "type": 0},
+        ]
+        data = {
+            "author": "swl21803",
+            "batch_number": 3333,
+            "title": "비료사업부 12월 고용보험료/7",
+            "attachments": [upload_img1, upload_pdf1],
+            "approvers": json.dumps(approvers)
+        }
+
+        response: Response = self.drf_client.post('/ea/create_document/', data=data)
+        self.assertEqual(response.status_code, 201)

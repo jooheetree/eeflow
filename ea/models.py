@@ -6,6 +6,8 @@ from pywebpush import webpush, WebPushException
 
 from django.conf import settings
 
+from employee.models import Employee, Department
+
 DELETE_STATE_CHOICES = (
     ('Y', '삭제됨'),
     ('N', '미삭제'),
@@ -30,6 +32,7 @@ SIGN_TYPE = (
     ('1', '합의'),
     ('2', '수신및참조'),
 )
+
 
 
 class TimeStampedModel(models.Model):
@@ -74,7 +77,6 @@ class Push(models.Model):
 
 class Document(TimeStampedModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='document')
     title = models.CharField(max_length=255)
     delete_state = models.CharField(
         max_length=2,
@@ -131,7 +133,7 @@ class Sign(TimeStampedModel):
 
     @staticmethod
     def get_result_type_by_seq(seq: int) -> SIGN_RESULT:
-        if seq == 1:
+        if seq == 0:
             return '0'
 
         return '1'
@@ -150,3 +152,12 @@ class Sign(TimeStampedModel):
         for push in self.user.push_data.all():
             push.send_push(content)
 
+
+class DefaulSignList(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='default_sign_list')
+    approver = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='+')
+    type = models.CharField(
+        max_length=2,
+        choices=SIGN_TYPE,
+        default='0',
+    )
