@@ -141,17 +141,23 @@ class EaTest(InitData, TestCase):
         self.sign_create(self.supervisor2, 1)
         self.sign_create(self.supervisor3, 2)
 
-        self.defaulsignlist_create(self.user, self.supervisor1.employee, 0)
-        self.defaulsignlist_create(self.user, self.supervisor2.employee, 0)
-        self.defaulsignlist_create(self.user, self.supervisor3.employee, 0)
+        self.defaulsignlist_create(self.user, self.supervisor1.employee, 0, 0)
+        self.defaulsignlist_create(self.user, self.supervisor2.employee, 0, 1)
+        self.defaulsignlist_create(self.user, self.supervisor3.employee, 0, 2)
+
+        token: str = self.login(self.client)
+        self.drf_client = APIClient()
+        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def document_create(self) -> None:
         self.title = '업무종결보고서'
         self.sign_list = '이철용->윤주영'
+        self.batch_number = 1111
         return Document.objects.create(
             author=self.user,
             title=self.title,
-            sign_list=self.sign_list
+            sign_list=self.sign_list,
+            batch_number=self.batch_number
         )
 
     def attachment_create(self, title: str, size: int, path: str) -> None:
@@ -171,11 +177,12 @@ class EaTest(InitData, TestCase):
             result=result
         )
 
-    def defaulsignlist_create(self, user: User, approver: Employee, type: SIGN_TYPE = 0) -> None:
+    def defaulsignlist_create(self, user: User, approver: Employee, type, order: int) -> None:
         return DefaulSignList.objects.create(
             user=user,
             approver=approver,
-            type=type
+            type=type,
+            order=order
         )
 
     def test_document_create(self):
@@ -191,7 +198,7 @@ class EaTest(InitData, TestCase):
         for attachment in attachments:
             self.assertEqual(document, attachment.document)
 
-        self.assertCountEqual(document.attachment.all(), attachments)
+        self.assertCountEqual(document.attachments.all(), attachments)
 
     def test_sign_create(self):
         document = Document.objects.first()
@@ -238,18 +245,14 @@ class EaTest(InitData, TestCase):
         """
         create Document View Test
         """
-        token: str = self.login(self.client)
-        self.drf_client = APIClient()
-        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-
         image1 = settings.MEDIA_ROOT + "/test/3.png"
         pdf1 = settings.MEDIA_ROOT + "/test/test.pdf"
         upload_img1 = SimpleUploadedFile("test1.png", content=open(image1, "rb").read())
         upload_pdf1 = SimpleUploadedFile("pdf1.pdf", content=open(pdf1, "rb").read())
         approvers = [
-            {"username": "cyl20509", "type": 0},
-            {"username": "jyy20510", "type": 0},
-            {"username": "hck18106", "type": 0},
+            {"id": "cyl20509", "type": 0},
+            {"id": "jyy20510", "type": 0},
+            {"id": "hck18106", "type": 0},
         ]
         data = {
             "author": "swl21803",
@@ -261,3 +264,17 @@ class EaTest(InitData, TestCase):
 
         response: Response = self.drf_client.post('/ea/create_document/', data=data)
         self.assertEqual(response.status_code, 201)
+
+    def test_get_defaultUsers_view(self):
+        response: Response = self.drf_client.get('/ea/get_defaultUsers/' + self.user.username)
+        self.assertGreaterEqual(len(response.data), 3)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_departmentUsers_view(self):
+        response: Response = self.drf_client.get('/ea/get_departmentUsers/' + self.user.employee.department.name)
+        self.assertGreaterEqual(len(response.data), 3)
+        self.assertEqual(response.status_code, 200)
+
+    def test_written_document_view(self):
+        response: Response = self.drf_client.get('/ea/written_document/' + self.user.username)
+        self.assertEqual(response.status_code, 200)

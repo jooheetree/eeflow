@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from ea.models import DefaulSignList
 from employee.models import Employee, Department, Position
 
 
@@ -21,8 +23,8 @@ class PositionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class EmployeeSerializer(serializers.ModelSerializer):
-    token = serializers.SerializerMethodField(read_only=True)
+class EmployeeWithTokenSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(source='user.auth_token.key',read_only=True)
     user = UserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
     position = PositionSerializer(read_only=True)
@@ -30,6 +32,3 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['user', 'department', 'position', 'avatar', 'token']
-
-    def get_token(self, employee: Employee):
-        return employee.user.auth_token.key

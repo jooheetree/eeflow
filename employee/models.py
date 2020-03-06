@@ -61,7 +61,7 @@ class Employee(models.Model):
     avatar = models.ImageField(blank=True, upload_to='avatar/')
 
     def get_order(self):
-        pass
+        return int(str(self.position.order) + str(self.department.order) + str(self.user.id))
         # return POSITION_ORDER[self.position]
 
     def __str__(self):

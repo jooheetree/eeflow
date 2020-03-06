@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 
-from ea.views import send_push, CreateDocument
+from ea.views import send_push, create_document, get_defaultUsers, get_departmentUsers, allUsers, written_document
 
 API_TITLE = 'Blog API'
 API_DESCRIPTION = 'A Web API for create and edit blog'
@@ -27,5 +27,9 @@ schema_view = get_swagger_view(title=API_TITLE)
 
 urlpatterns = [
     path('push/', send_push, name='send_push'),
-    path('create_document/', CreateDocument.as_view(), name='create_document'),
+    path('create_document/', create_document, name='create_document'),
+    path('written_document/<str:username>', written_document, name='written_document'),
+    path('get_defaultUsers/<str:username>', get_defaultUsers, name='get_defaultUsers'),
+    path('get_departmentUsers/<str:department_name>', get_departmentUsers, name='get_departmentUsers/'),
+    path('get_allUsers/', allUsers, name='get_allUsers'),
 ]

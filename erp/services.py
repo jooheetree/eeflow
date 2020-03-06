@@ -6,10 +6,10 @@ from cx_Oracle import Connection, Cursor
 
 
 class OracleService:
-    def __init__(self, columns: list, table: str, where: str = ''):
+    def __init__(self, columns: list, table: str, wheres: list = []):
         self.result: list = []
         self.cursor: Cursor = self.init_env().cursor()
-        query: str = self.create_query(columns, table)
+        query: str = self.create_query(columns, table, wheres)
         self.get_result(query, columns)
 
     def init_env(self) -> Connection:
@@ -38,10 +38,15 @@ class OracleService:
                 if max_len == i:
                     self.result.append(dict_temp)
 
-    def create_query(self, columns: list, table: str) -> str:
+    def create_query(self, columns: list, table: str, wheres: list) -> str:
         select_query: str = 'select '
         from_query: str = f'from {table} '
         where_query: str = "where rpsfx = 001"
+
+        if wheres:
+            for where in wheres:
+                where_query += f' and {where}'
+
         for column in columns:
             for k, v in column.items():
                 select_query += f'{k} as {v} ,'

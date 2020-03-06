@@ -34,7 +34,6 @@ SIGN_TYPE = (
 )
 
 
-
 class TimeStampedModel(models.Model):
     """
         created , modified field 제공해주는 abstract base class model
@@ -89,6 +88,7 @@ class Document(TimeStampedModel):
         default='1',
     )
     sign_list = models.CharField(max_length=255)
+    batch_number = models.PositiveIntegerField()
 
     def finish_deny(self, push_content) -> None:
         self.doc_status = '2'
@@ -99,18 +99,24 @@ class Document(TimeStampedModel):
     def finish_approve(self) -> None:
         self.doc_status = '3'
 
+    def __str__(self):
+        return f'{self.title}({self.author.first_name})'
+
 
 class Attachment(TimeStampedModel):
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='attachment')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='attachments')
     title = models.CharField(max_length=255)
     size = models.PositiveIntegerField()
     path = models.FileField(upload_to='attachment/')
     isImg = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f'{self.title}({self.size}KB)'
+
 
 class Sign(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sign')
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='sign')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='signs')
     result = models.CharField(
         max_length=2,
         choices=SIGN_RESULT,
@@ -152,6 +158,9 @@ class Sign(TimeStampedModel):
         for push in self.user.push_data.all():
             push.send_push(content)
 
+    def __str__(self):
+        return f'{self.document.title}({self.user.first_name}) {self.seq}번째'
+
 
 class DefaulSignList(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='default_sign_list')
@@ -161,3 +170,7 @@ class DefaulSignList(TimeStampedModel):
         choices=SIGN_TYPE,
         default='0',
     )
+    order = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return f'{self.user.first_name}_{self.approver.user.first_name}/{self.order}번째'
