@@ -25,10 +25,11 @@ class PositionSerializer(serializers.ModelSerializer):
 
 class EmployeeWithTokenSerializer(serializers.ModelSerializer):
     token = serializers.CharField(source='user.auth_token.key',read_only=True)
+    endpoint = serializers.CharField(source='user.push_data.first.endpoint',read_only=True)
     user = UserSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
     position = PositionSerializer(read_only=True)
 
     class Meta:
         model = Employee
-        fields = ['user', 'department', 'position', 'avatar', 'token']
+        fields = ['user', 'department', 'position', 'avatar', 'token', 'endpoint']

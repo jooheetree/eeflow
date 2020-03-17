@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ea.models import DefaulSignList, Document, Attachment, Sign
+from ea.models import DefaulSignList, Document, Attachment, Sign, Push
 from employee.models import Employee
 
 
@@ -62,3 +62,10 @@ class DocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = ['id', 'title', 'author', 'department', 'doc_status', 'created', 'batch_number',
                   'attachments', 'signs']
+
+
+class PushSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Push
+        fields = '__all__'

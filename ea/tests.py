@@ -44,11 +44,11 @@ from pywebpush import webpush
 #         self.assertIn('itemey 2', response.content.decode())
 #
 
-ENDPOINT = 'https://fcm.googleapis.com/fcm/send/eqwmBSui0z0:APA91bH7ejT77FRQxjlXcxKdwMp3H7_vM2Ybj2jO1Fk5' \
-           'xXTOyZ7pTkfgQa5eUKl651VtMklqeSlCmXGRzbroaXTPXyg0sQdcU0qaR5br5QF8l316rjc8kndJdV0knJB77cw5q99' \
-           'fcoD3'
-P256dh = 'BG15pJmeP6bZ1uEk1mFTyazB-wb8sgwRstPbXYeTaBWTtNHw5cHU1MBcx2P_5oJ1Ii_4uk-Jjh--XRxneUJi9po'
-AUTH = 'pd-7EmXSFy_6Y72NaK5aCA'
+ENDPOINT = 'https://fcm.googleapis.com/fcm/send/fQT7nCLduls:' \
+           'APA91bHm-yeNwIONCWJJd5lmDY5kyQa6Z8UHS4iVTGnidI0AaT0gJC_ou4F4UJ60SmpbgMnPcn5V1TWzTR7Fq_4ULr6ntmXvVL' \
+           '-oo9oH4R9Q4QSI4pC8dsWrjc4orFQd_UAkx0HOkAUJ'
+P256dh = 'BINj2y8cAvgRaATSLDYbATuJWEeiC_0YKopJn3lxrf1Wqpw06wZ5HoYXn_VOiTNVO9yWORvbhOLM_Da-L5KOIMg'
+AUTH = 'UaRDmYdV2AYZZS9OCGgLxg'
 
 
 class InitData:
@@ -92,24 +92,38 @@ class InitData:
 class PushTest(InitData, TestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create(
-            username='testuser',
-            password='testuser'
-        )
-        self.client.force_login(self.user)
-        self.endpoint = ENDPOINT
-        self.p256dh = P256dh
-        self.auth = AUTH
-        self.push = self.create_push_data(self.user)
+        self.user = User.objects.create(username='swl21803')
+        self.user.set_password('swl21803')
+        self.user.first_name = '이승우'
+        self.user.save()
 
-    def test_saving_data(self):
-        self.assertEqual(self.push.user, self.user)
-        self.assertEqual(self.push.endpoint, self.endpoint)
-        self.assertEqual(self.push.p256dh, self.p256dh)
-        self.assertEqual(self.push.auth, self.auth)
+        self.token: str = self.login(self.client)
 
-    def test_view(self):
-        response = self.client.post('/ea/push/')
+        self.drf_client = APIClient()
+        self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+
+    def test_push_view(self):
+        """
+        push create, send, delete view 테스트
+        """
+        push = {"endpoint": "https://fcm.googleapis.com/fcm/send/fQT7nCLduls:APA91bHm-yeNwIONCWJJd5lmDY5ky"
+                            "Qa6Z8UHS4iVTGnidI0AaT0gJC_ou4F4UJ60SmpbgMnPcn5V1TWzTR7Fq_4ULr6ntmXvVL-oo9oH4R9"
+                            "Q4QSI4pC8dsWrjc4orFQd_UAkx0HOkAUJ",
+                "expirationTime": None, "keys": {
+                "p256dh": "BINj2y8cAvgRaATSLDYbATuJWEeiC_0YKopJn3lxrf1Wqpw06wZ5HoYXn_VOiTNVO9yWORvbhOLM_Da-L5KOIMg",
+                "auth": "UaRDmYdV2AYZZS9OCGgLxg"}}
+        data = {"pushInfo": push}
+
+        response = self.drf_client.post('/ea/create_push/', data=data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('endpoint'), ENDPOINT)
+        self.assertEqual(response.data.get('p256dh'), P256dh)
+        self.assertEqual(response.data.get('auth'), AUTH)
+
+        push = Push.objects.filter(user=self.user).first()
+        push.send_push('[test_create_push_view]')
+
+        response = self.drf_client.post('/ea/delete_push/', data={"endpoint": ENDPOINT})
         self.assertEqual(response.status_code, 200)
 
 

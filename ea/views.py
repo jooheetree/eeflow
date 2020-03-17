@@ -12,7 +12,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from ea.models import Push, Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
-from ea.serializers import DefaultUsersSerializer, SignUsersSerializer, DocumentSerializer
+from ea.serializers import DefaultUsersSerializer, SignUsersSerializer, DocumentSerializer, PushSerializer
 from ea.services import DocumentServices, Approvers
 import json
 
@@ -25,6 +25,47 @@ def send_push(request: HttpRequest):
         for push in pushes:
             push.send_push('이승우짱!!!')
         return HttpResponse('<H1>HI</H1>')
+
+
+@api_view(['POST'])
+def create_push(request: Request):
+    push_info: dict = request.data.get('pushInfo')
+    data = {'user': request.user.id,
+            'endpoint': push_info.get('endpoint'),
+            'p256dh': push_info.get('keys').get('p256dh'),
+            'auth': push_info.get('keys').get('auth')}
+
+    if Push.objects.filter(endpoint=push_info.get('endpoint')):
+        return Response(status=status.HTTP_200_OK)
+
+    serializer = PushSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def delete_push(request: Request):
+    endpoint: str = request.data.get('endpoint')
+    push: Push = Push.objects.get(endpoint=endpoint)
+    push.delete()
+    # push_info: dict = request.data.get('pushInfo')
+    # data = {'user': request.user.id,
+    #         'endpoint': push_info.get('endpoint'),
+    #         'p256dh': push_info.get('keys').get('p256dh'),
+    #         'auth': push_info.get('keys').get('auth')}
+    #
+    # if Push.objects.filter(endpoint=push_info.get('endpoint')):
+    #     return Response(status=status.HTTP_200_OK)
+    #
+    # serializer = PushSerializer(data=data)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

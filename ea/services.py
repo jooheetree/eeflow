@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
+from django.db.models import Q
 
 from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
 from employee.models import Employee
@@ -41,6 +42,8 @@ class DocumentServices:
             self.create_sign(user, i, document)
             self.create_defaulsignlist(author, user.employee, approver.get('type'), i)
 
+        self.send_push(document)
+
     def create_document(self, title: str, auhor: User, approvers: Approvers, batch_number: int) -> Document:
         sign_list: str = ''
         for approver in approvers:
@@ -57,11 +60,22 @@ class DocumentServices:
         for attachment in attachments:
             fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
             filename = fs.save(attachment.name, attachment)
+            is_img = False
+            is_pdf = False
+
+            if 'image' in attachment.content_type:
+                is_img = True
+
+            if 'pdf' in attachment.content_type:
+                is_pdf = True
+
             Attachment.objects.create(
                 document=document,
                 title=filename,
                 size=attachment.size,
-                path='attachment/' + filename
+                path='attachment/' + filename,
+                isImg=is_img,
+                isPdf=is_pdf
             )
 
     def create_sign(self, user: User, seq: int, document: Document) -> None:
@@ -80,3 +94,9 @@ class DocumentServices:
             type=type,
             order=order
         )
+
+    def send_push(self, document: Document):
+        sign: Sign = Sign.objects.filter(Q(document=document), Q(result=0)).first()
+        pushs = sign.user.push_data.all()
+        for push in pushs:
+            push.send_push(f'[결재] {document.title}')

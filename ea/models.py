@@ -108,7 +108,8 @@ class Attachment(TimeStampedModel):
     title = models.CharField(max_length=255)
     size = models.PositiveIntegerField()
     path = models.FileField(upload_to='attachment/')
-    isImg = models.BooleanField(default=True)
+    isImg = models.BooleanField(default=False)
+    isPdf = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.title}({self.size}KB)'
