@@ -105,7 +105,9 @@ def get_departmentUsers(request: Request, department_name: str):
 
 @api_view(['GET'])
 def allUsers(request: Request):
-    pass
+    employees = Employee.objects.all()
+    serializer = SignUsersSerializer(employees, many=True)
+    return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -113,3 +115,41 @@ def written_document(request: Request, username: str):
     documents = Document.objects.filter(author__username=username)
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def approved_document(request: Request, username: str):
+    documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=2))
+    serializer = DocumentSerializer(documents, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def rejected_document(request: Request, username: str):
+    documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=3))
+    serializer = DocumentSerializer(documents, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def sign_document(request: Request, username: str):
+    documents = Document.objects.filter(Q(signs__result=0), Q(signs__user__username=username))
+    serializer = DocumentSerializer(documents, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def do_sign(request: Request):
+    document_id: int = request.data.get('document_id')
+    username: str = request.data.get('username')
+    opinion: str = request.data.get('opinion')
+    sign_type: str = request.data.get('sign_type')
+
+    document: Document = Document.objects.get(id=document_id)
+    sign = document.signs.get(user__username=username)
+    sign.approve_sign(opinion) if sign_type == '승인' else sign.deny_sign(opinion)
+
+    # documents = Document.objects.filter(Q(signs__result=0), Q(signs__user__username=username))
+    # serializer = DocumentSerializer(documents, many=True)
+    return Response(status=status.HTTP_200_OK)
+

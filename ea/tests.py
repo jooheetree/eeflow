@@ -44,11 +44,10 @@ from pywebpush import webpush
 #         self.assertIn('itemey 2', response.content.decode())
 #
 
-ENDPOINT = 'https://fcm.googleapis.com/fcm/send/fQT7nCLduls:' \
-           'APA91bHm-yeNwIONCWJJd5lmDY5kyQa6Z8UHS4iVTGnidI0AaT0gJC_ou4F4UJ60SmpbgMnPcn5V1TWzTR7Fq_4ULr6ntmXvVL' \
-           '-oo9oH4R9Q4QSI4pC8dsWrjc4orFQd_UAkx0HOkAUJ'
-P256dh = 'BINj2y8cAvgRaATSLDYbATuJWEeiC_0YKopJn3lxrf1Wqpw06wZ5HoYXn_VOiTNVO9yWORvbhOLM_Da-L5KOIMg'
-AUTH = 'UaRDmYdV2AYZZS9OCGgLxg'
+ENDPOINT = 'https://fcm.googleapis.com/fcm/send/esCroiSB_yI:APA91bF32Xw0UtGWDbJdCXPo7pXldE_97BVirMMba3NC' \
+           '-7O7ftb5t_V33HNrjzRbN_T3K23RKvV17h37hlB-ChyQeBXznsioBS0_5GtkuR8JGOMHAZImB1YOV8QdITy41QTE3lI188xC'
+P256dh = 'BE2Yq8-qL61PF6T1I332axXznrYIrizeOWaKZ-0prLuJCW-c8QsmzUglKrsTYiAXHea_h3ifbctmOyg2rvfjARg'
+AUTH = 'Z54KGU-QHnOcGTnVnjhryQ'
 
 
 class InitData:
@@ -106,12 +105,10 @@ class PushTest(InitData, TestCase):
         """
         push create, send, delete view 테스트
         """
-        push = {"endpoint": "https://fcm.googleapis.com/fcm/send/fQT7nCLduls:APA91bHm-yeNwIONCWJJd5lmDY5ky"
-                            "Qa6Z8UHS4iVTGnidI0AaT0gJC_ou4F4UJ60SmpbgMnPcn5V1TWzTR7Fq_4ULr6ntmXvVL-oo9oH4R9"
-                            "Q4QSI4pC8dsWrjc4orFQd_UAkx0HOkAUJ",
+        push = {"endpoint": ENDPOINT,
                 "expirationTime": None, "keys": {
-                "p256dh": "BINj2y8cAvgRaATSLDYbATuJWEeiC_0YKopJn3lxrf1Wqpw06wZ5HoYXn_VOiTNVO9yWORvbhOLM_Da-L5KOIMg",
-                "auth": "UaRDmYdV2AYZZS9OCGgLxg"}}
+                "p256dh": P256dh,
+                "auth": AUTH}}
         data = {"pushInfo": push}
 
         response = self.drf_client.post('/ea/create_push/', data=data, format='json')
@@ -228,32 +225,17 @@ class EaTest(InitData, TestCase):
             self.assertEqual(defaulSignList.user, self.user)
 
     def test_sign_after_approve(self):
-        sign = self.approve_sign(Sign.objects.get(seq=1))
+        sign = Sign.objects.get(seq=1)
+        sign.approve_sign('열심히하세요')
         self.assertEqual(sign.get_result_display(), '승인')
-        self.assertEqual(sign.comment, '승인합니다')
+        self.assertEqual(sign.comment, '열심히하세요')
 
     def test_sign_after_deny(self):
-        sign = self.deny_sign(Sign.objects.get(seq=2))
+        sign = Sign.objects.get(seq=2)
+        sign.deny_sign('반려합니다')
         self.assertEqual(sign.get_result_display(), '반려')
         self.assertEqual(sign.comment, '반려합니다')
         self.assertEqual(sign.document.get_doc_status_display(), '반려')
-
-    def approve_sign(self, sign: Sign) -> Sign:
-        sign.approve()
-        sign.comment = "승인합니다"
-        sign.sign_date = timezone.now()
-        next_sign = sign.get_next_sign()
-        if next_sign:
-            next_sign.notify_next_user('결재가있씁니다')
-
-        return sign
-
-    def deny_sign(self, sign: Sign) -> Sign:
-        sign.deny()
-        sign.comment = "반려합니다"
-        sign.sign_date = timezone.now()
-        sign.document.finish_deny('[push] 반려요!')
-        return sign
 
     def test_create_document_view(self):
         """
@@ -289,6 +271,36 @@ class EaTest(InitData, TestCase):
         self.assertGreaterEqual(len(response.data), 3)
         self.assertEqual(response.status_code, 200)
 
+    def test_get_allUsers_view(self):
+        response: Response = self.drf_client.get('/ea/get_allUsers/')
+        self.assertGreaterEqual(len(response.data), 3)
+        self.assertEqual(response.status_code, 200)
+
     def test_written_document_view(self):
         response: Response = self.drf_client.get('/ea/written_document/' + self.user.username)
+        self.assertEqual(response.status_code, 200)
+
+    def test_approved_document_view(self):
+        response: Response = self.drf_client.get('/ea/approved_document/' + self.user.username)
+        self.assertEqual(response.status_code, 200)
+
+    def test_rejected_document_view(self):
+        response: Response = self.drf_client.get('/ea/rejected_document/' + self.user.username)
+        self.assertEqual(response.status_code, 200)
+
+    def test_sign_document_view(self):
+        response: Response = self.drf_client.get('/ea/sign_document/' + self.user.username)
+        self.assertEqual(response.status_code, 200)
+
+    def test_approve_or_deny_sign_view(self):
+        data = {
+            "document_id": 1,
+            "username": 'cyl20509',
+            "opinion": '열심히 하세요',
+            "sign_type": '승인'
+        }
+        #
+        # response: Response = self.drf_client.post('/ea/create_document/', data=data)
+
+        response: Response = self.drf_client.post('/ea/do_sign/', data=data)
         self.assertEqual(response.status_code, 200)

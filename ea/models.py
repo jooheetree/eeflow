@@ -5,6 +5,7 @@ from typing import Union
 from pywebpush import webpush, WebPushException
 
 from django.conf import settings
+from django.utils import timezone
 
 from employee.models import Employee, Department
 
@@ -90,14 +91,19 @@ class Document(TimeStampedModel):
     sign_list = models.CharField(max_length=255)
     batch_number = models.PositiveIntegerField()
 
-    def finish_deny(self, push_content) -> None:
+    def finish_deny(self, push_content: str) -> None:
         self.doc_status = '2'
+        self.save()
 
         for push in self.author.push_data.all():
             push.send_push(push_content)
 
-    def finish_approve(self) -> None:
+    def finish_approve(self, push_content: str) -> None:
         self.doc_status = '3'
+        self.save()
+
+        for push in self.author.push_data.all():
+            push.send_push(push_content)
 
     def __str__(self):
         return f'{self.title}({self.author.first_name})'
@@ -154,10 +160,31 @@ class Sign(TimeStampedModel):
     def deny(self) -> None:
         self.result = '3'
 
-    def notify_next_user(self, content):
+    def notify_next_user(self, content: str) -> None:
         self.stand_by()
+        self.save()
         for push in self.user.push_data.all():
             push.send_push(content)
+
+    def approve_sign(self, comment: str) -> None:
+        self.approve()
+        self.comment = comment
+        self.sign_date = timezone.now()
+        self.save()
+
+        next_sign = self.get_next_sign()
+
+        if next_sign:
+            next_sign.notify_next_user(f'[결재요청] {self.document.title}')
+        else:
+            self.document.finish_approve(f'[결재완료] {self.document.title}')
+
+    def deny_sign(self, comment: str) -> None:
+        self.deny()
+        self.comment = comment
+        self.sign_date = timezone.now()
+        self.save()
+        self.document.finish_deny(f'[반려] {self.document.title}')
 
     def __str__(self):
         return f'{self.document.title}({self.user.first_name}) {self.seq}번째'
