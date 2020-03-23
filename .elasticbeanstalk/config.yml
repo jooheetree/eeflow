@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: eeflow-first
+    environment: eeflow-env
     group_suffix: null
 environment-defaults:
   Eeflow-env:
@@ -12,7 +12,7 @@ environment-defaults:
 global:
   application_name: eeflow
   branch: null
-  default_ec2_keyname: eeflow
+  default_ec2_keyname: eeflow1
   default_platform: Python 3.6
   default_region: ap-northeast-2
   include_git_submodules: true

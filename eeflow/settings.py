@@ -25,7 +25,7 @@ SECRET_KEY = '!+!@7c0#&ng4pa)&y^+m%$m1z_((t*ua1^#skaj0rl1mna7xpg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eeflow-env.eba-7m9adnkv.ap-northeast-2.elasticbeanstalk.com', 'searchrank.shop']
 
 
 # Application definition
