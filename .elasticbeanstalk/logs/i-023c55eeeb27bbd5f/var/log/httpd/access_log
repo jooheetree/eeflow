@@ -1,0 +1,5 @@
+127.0.0.1 (-) - - [20/Mar/2020:07:03:27 +0000] "GET / HTTP/1.1" 200 3462 "-" "Python-urllib/2.7"
+112.216.66.218 (-) - - [20/Mar/2020:07:11:06 +0000] "GET / HTTP/1.1" 200 3462 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Whale/2.7.97.10 Safari/537.36"
+112.216.66.218 (-) - - [20/Mar/2020:07:11:08 +0000] "GET /favicon.ico HTTP/1.1" 200 3462 "http://eeflow-env.eba-y4yaswrm.ap-northeast-2.elasticbeanstalk.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Whale/2.7.97.10 Safari/537.36"
+112.216.66.218 (-) - - [20/Mar/2020:07:11:19 +0000] "GET /favicon.ico HTTP/1.1" 200 3462 "http://eeflow-env.eba-y4yaswrm.ap-northeast-2.elasticbeanstalk.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Whale/2.7.97.10 Safari/537.36"
+170.79.82.9 (-) - - [20/Mar/2020:07:37:17 +0000] "GET / HTTP/1.1" 200 3462 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"

@@ -1,0 +1,11 @@
+2020-03-20 08:23:56,624 [INFO] (28411 MainThread) [tailLogs.py-56] [root tailLogs main] Starting tail logs task with batch id e3d8a520-f99c-4618-8b88-36ebfee5d921
+2020-03-20 08:23:56,629 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /var/log/httpd/error_log
+2020-03-20 08:23:56,629 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /opt/python/log/supervisord.log
+2020-03-20 08:23:56,630 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /var/log/httpd/access_log
+2020-03-20 08:23:56,633 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /var/log/eb-activity.log
+2020-03-20 08:23:56,633 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /opt/python/log/sample-app.log
+2020-03-20 08:23:56,635 [INFO] (28411 MainThread) [upload_tools.py-293] [root upload_tools execute] Successfully tailed file /var/log/eb-commandprocessor.log
+2020-03-20 08:23:56,713 [INFO] (28411 MainThread) [s3_tools.py-208] [root s3_tools _process_result] Received status code 200 with text: 
+2020-03-20 08:23:56,713 [INFO] (28411 MainThread) [upload_tools.py-317] [root upload_tools __exit__] Successfully uploaded tailed content for 6 files to s3 at location resources/environments/logs/tail/e-rm2mqejgvt/i-023c55eeeb27bbd5f/TailLogs-1584692636636.out
+2020-03-20 08:23:56,713 [INFO] (28411 MainThread) [tailLogs.py-92] [root tailLogs main] [Instance: i-023c55eeeb27bbd5f] Successfully finished tailing 6 log(s)
+2020-03-20 08:25:31,817 [INFO] (28478 MainThread) [bundleLogs.py-54] [root bundleLogs main] Starting bundle logs task with batch id 39d09493-69d0-4023-97cc-f46cb6005613

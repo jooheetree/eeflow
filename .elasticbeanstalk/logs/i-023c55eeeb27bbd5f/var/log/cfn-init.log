@@ -1,0 +1,37 @@
+2020-03-20 07:02:42,598 [INFO] -----------------------Starting build-----------------------
+2020-03-20 07:02:42,604 [INFO] Running configSets: _OnInstanceBoot
+2020-03-20 07:02:42,608 [INFO] Running configSet _OnInstanceBoot
+2020-03-20 07:02:42,612 [INFO] Running config AWSEBBaseConfig
+2020-03-20 07:02:42,618 [INFO] Command clearbackupfiles succeeded
+2020-03-20 07:02:42,625 [INFO] Running config AWSEBMessageOfTheDay
+2020-03-20 07:02:42,629 [INFO] Command 01clearoriginal succeeded
+2020-03-20 07:02:42,634 [INFO] Command 02createbanner succeeded
+2020-03-20 07:02:42,646 [INFO] Command 03updatebanner succeeded
+2020-03-20 07:02:42,652 [INFO] Running config AWSEBULimitConfig
+2020-03-20 07:02:42,656 [INFO] Command 00removebackup succeeded
+2020-03-20 07:02:42,661 [INFO] Running config AWSEBCfnHupEndpointOverride
+2020-03-20 07:02:42,665 [INFO] Command clearbackupfiles succeeded
+2020-03-20 07:02:42,670 [INFO] Running config Infra-InstallContainerHooksPkg
+2020-03-20 07:02:42,674 [INFO] Command 00mkdir succeeded
+2020-03-20 07:02:42,755 [INFO] Command 01download_container_hooks succeeded
+2020-03-20 07:02:42,778 [INFO] Command 02install_container_hooks succeeded
+2020-03-20 07:02:42,782 [INFO] Command 03cleanup succeeded
+2020-03-20 07:02:42,787 [INFO] Running config Infra-WriteLeaderTestScript
+2020-03-20 07:02:42,793 [INFO] Running config Infra-WriteTailLogsConf
+2020-03-20 07:02:42,798 [INFO] Running config Infra-WriteSystemTailLogsConf
+2020-03-20 07:02:42,803 [INFO] Running config Infra-WriteBundleLogsConf
+2020-03-20 07:02:42,808 [INFO] Running config Infra-WritePublishLogsConf
+2020-03-20 07:02:42,812 [INFO] Running config Infra-WritePublishLogsCron
+2020-03-20 07:02:42,813 [INFO] ConfigSets completed
+2020-03-20 07:02:42,814 [INFO] -----------------------Build complete-----------------------
+2020-03-20 07:03:20,157 [INFO] -----------------------Starting build-----------------------
+2020-03-20 07:03:20,164 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2020-03-20 07:03:20,167 [INFO] Running configSet Infra-EmbeddedPreBuild
+2020-03-20 07:03:20,170 [INFO] Running config prebuild_0_eeflow
+2020-03-20 07:03:20,171 [INFO] ConfigSets completed
+2020-03-20 07:03:20,171 [INFO] -----------------------Build complete-----------------------
+2020-03-20 07:03:22,761 [INFO] -----------------------Starting build-----------------------
+2020-03-20 07:03:22,769 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2020-03-20 07:03:22,772 [INFO] Running configSet Infra-EmbeddedPostBuild
+2020-03-20 07:03:22,772 [INFO] ConfigSets completed
+2020-03-20 07:03:22,772 [INFO] -----------------------Build complete-----------------------

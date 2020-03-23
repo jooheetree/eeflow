@@ -1,0 +1,123 @@
+Mar 20 07:02:40 ip-172-31-36-190 crond[2624]: (CRON) STARTUP (1.4.4)
+Mar 20 07:02:40 ip-172-31-36-190 crond[2624]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 61% if used.)
+Mar 20 07:02:40 ip-172-31-36-190 crond[2624]: (CRON) INFO (running with inotify support)
+Mar 20 07:03:01 ip-172-31-36-190 CROND[3180]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:04:01 ip-172-31-36-190 CROND[3459]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:05:01 ip-172-31-36-190 CROND[3488]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:05:01 ip-172-31-36-190 CROND[3489]: (root) CMD (clearStaleLogPublishingRecords.py)
+Mar 20 07:06:01 ip-172-31-36-190 CROND[3518]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:07:01 ip-172-31-36-190 CROND[3546]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:08:01 ip-172-31-36-190 CROND[3574]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:09:01 ip-172-31-36-190 CROND[3604]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:10:01 ip-172-31-36-190 CROND[3633]: (root) CMD (publishLogs.py --de-dupe --conf-path '/opt/elasticbeanstalk/tasks/publishlogs.d/*' --location-prefix resources/environments/logs/publish/ --num-concurrent 2)
+Mar 20 07:10:01 ip-172-31-36-190 CROND[3634]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:11:01 ip-172-31-36-190 CROND[3665]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:12:01 ip-172-31-36-190 CROND[3699]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:13:01 ip-172-31-36-190 CROND[3727]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:14:01 ip-172-31-36-190 CROND[3757]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:15:01 ip-172-31-36-190 CROND[3785]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:16:01 ip-172-31-36-190 CROND[3813]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:17:01 ip-172-31-36-190 CROND[3841]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:18:01 ip-172-31-36-190 CROND[3869]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:19:01 ip-172-31-36-190 CROND[3899]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:20:01 ip-172-31-36-190 CROND[3927]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:21:01 ip-172-31-36-190 CROND[3955]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:22:01 ip-172-31-36-190 CROND[3983]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:23:01 ip-172-31-36-190 CROND[4011]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:24:01 ip-172-31-36-190 CROND[4041]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:25:01 ip-172-31-36-190 CROND[4070]: (root) CMD (clearStaleLogPublishingRecords.py)
+Mar 20 07:25:01 ip-172-31-36-190 CROND[4071]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:26:01 ip-172-31-36-190 CROND[4100]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:27:01 ip-172-31-36-190 CROND[4128]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:28:01 ip-172-31-36-190 CROND[4156]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:29:01 ip-172-31-36-190 CROND[4186]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:30:01 ip-172-31-36-190 CROND[4250]: (root) CMD (publishLogs.py --de-dupe --conf-path '/opt/elasticbeanstalk/tasks/publishlogs.d/*' --location-prefix resources/environments/logs/publish/ --num-concurrent 2)
+Mar 20 07:30:01 ip-172-31-36-190 CROND[4251]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:31:01 ip-172-31-36-190 CROND[4282]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:32:01 ip-172-31-36-190 CROND[4310]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:33:01 ip-172-31-36-190 CROND[4338]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:34:01 ip-172-31-36-190 CROND[4368]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:35:01 ip-172-31-36-190 CROND[4396]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:36:01 ip-172-31-36-190 CROND[4424]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:37:01 ip-172-31-36-190 CROND[4452]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:38:01 ip-172-31-36-190 CROND[4482]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:39:01 ip-172-31-36-190 CROND[4510]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:40:01 ip-172-31-36-190 CROND[4540]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:41:01 ip-172-31-36-190 CROND[4568]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:42:01 ip-172-31-36-190 CROND[4596]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:43:01 ip-172-31-36-190 CROND[4624]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:44:01 ip-172-31-36-190 CROND[4652]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:45:01 ip-172-31-36-190 CROND[4683]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:45:01 ip-172-31-36-190 CROND[4684]: (root) CMD (clearStaleLogPublishingRecords.py)
+Mar 20 07:46:01 ip-172-31-36-190 CROND[4713]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:47:01 ip-172-31-36-190 CROND[4741]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:48:01 ip-172-31-36-190 CROND[4769]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:49:01 ip-172-31-36-190 CROND[4797]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:50:01 ip-172-31-36-190 CROND[4828]: (root) CMD (publishLogs.py --de-dupe --conf-path '/opt/elasticbeanstalk/tasks/publishlogs.d/*' --location-prefix resources/environments/logs/publish/ --num-concurrent 2)
+Mar 20 07:50:01 ip-172-31-36-190 CROND[4829]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:51:01 ip-172-31-36-190 CROND[4860]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:52:01 ip-172-31-36-190 CROND[4888]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:53:01 ip-172-31-36-190 CROND[4916]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:54:01 ip-172-31-36-190 CROND[4944]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:55:01 ip-172-31-36-190 CROND[5009]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:56:01 ip-172-31-36-190 CROND[5037]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:57:01 ip-172-31-36-190 CROND[5065]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:58:01 ip-172-31-36-190 CROND[5093]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 07:59:01 ip-172-31-36-190 CROND[5121]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:00:01 ip-172-31-36-190 CROND[5151]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:01:01 ip-172-31-36-190 CROND[5180]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:01:01 ip-172-31-36-190 CROND[5181]: (root) CMD (run-parts /etc/cron.hourly)
+Mar 20 08:01:01 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting 0anacron
+Mar 20 08:01:02 ip-172-31-36-190 anacron[5205]: Anacron started on 2020-03-20
+Mar 20 08:01:02 ip-172-31-36-190 anacron[5205]: Will run job `cron.daily' in 15 min.
+Mar 20 08:01:02 ip-172-31-36-190 anacron[5205]: Will run job `cron.weekly' in 35 min.
+Mar 20 08:01:02 ip-172-31-36-190 anacron[5205]: Will run job `cron.monthly' in 55 min.
+Mar 20 08:01:02 ip-172-31-36-190 anacron[5205]: Jobs will be executed sequentially
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5207]: finished 0anacron
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logcleanup.elasticbeanstalk.healthd.httpd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5218]: finished cron.logcleanup.elasticbeanstalk.healthd.httpd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logrotate.elasticbeanstalk.awslogs.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5225]: finished cron.logrotate.elasticbeanstalk.awslogs.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logrotate.elasticbeanstalk.healthd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5232]: finished cron.logrotate.elasticbeanstalk.healthd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logrotate.elasticbeanstalk.httpd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5239]: finished cron.logrotate.elasticbeanstalk.httpd.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logrotate.elasticbeanstalk.python-app.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5246]: finished cron.logrotate.elasticbeanstalk.python-app.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5181]: starting cron.logrotate.elasticbeanstalk.supervisord.conf
+Mar 20 08:01:02 ip-172-31-36-190 run-parts(/etc/cron.hourly)[5253]: finished cron.logrotate.elasticbeanstalk.supervisord.conf
+Mar 20 08:02:01 ip-172-31-36-190 CROND[5267]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:03:01 ip-172-31-36-190 CROND[5297]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:04:01 ip-172-31-36-190 CROND[5325]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:05:01 ip-172-31-36-190 CROND[5356]: (root) CMD (clearStaleLogPublishingRecords.py)
+Mar 20 08:05:01 ip-172-31-36-190 CROND[5357]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:06:01 ip-172-31-36-190 CROND[5386]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:07:01 ip-172-31-36-190 CROND[5414]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:08:01 ip-172-31-36-190 CROND[5442]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:09:01 ip-172-31-36-190 CROND[5470]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:10:01 ip-172-31-36-190 CROND[5499]: (root) CMD (publishLogs.py --de-dupe --conf-path '/opt/elasticbeanstalk/tasks/publishlogs.d/*' --location-prefix resources/environments/logs/publish/ --num-concurrent 2)
+Mar 20 08:10:01 ip-172-31-36-190 CROND[5500]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:11:01 ip-172-31-36-190 CROND[5533]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:12:01 ip-172-31-36-190 CROND[5563]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:13:01 ip-172-31-36-190 CROND[5591]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:14:01 ip-172-31-36-190 CROND[5619]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:15:01 ip-172-31-36-190 CROND[5647]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:16:01 ip-172-31-36-190 CROND[5677]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:16:02 ip-172-31-36-190 anacron[5205]: Job `cron.daily' started
+Mar 20 08:16:02 ip-172-31-36-190 run-parts(/etc/cron.daily)[5692]: starting logrotate
+Mar 20 08:16:02 ip-172-31-36-190 run-parts(/etc/cron.daily)[5700]: finished logrotate
+Mar 20 08:16:02 ip-172-31-36-190 run-parts(/etc/cron.daily)[5692]: starting man-db.cron
+Mar 20 08:16:16 ip-172-31-36-190 run-parts(/etc/cron.daily)[28137]: finished man-db.cron
+Mar 20 08:16:16 ip-172-31-36-190 run-parts(/etc/cron.daily)[5692]: starting tmpwatch
+Mar 20 08:16:16 ip-172-31-36-190 run-parts(/etc/cron.daily)[28163]: finished tmpwatch
+Mar 20 08:16:16 ip-172-31-36-190 anacron[5205]: Job `cron.daily' terminated
+Mar 20 08:17:01 ip-172-31-36-190 CROND[28175]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:18:01 ip-172-31-36-190 CROND[28203]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:19:01 ip-172-31-36-190 CROND[28264]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:20:01 ip-172-31-36-190 CROND[28292]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:21:01 ip-172-31-36-190 CROND[28322]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:22:01 ip-172-31-36-190 CROND[28350]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:23:01 ip-172-31-36-190 CROND[28378]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:24:01 ip-172-31-36-190 CROND[28421]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:25:01 ip-172-31-36-190 CROND[28450]: (root) CMD (/usr/sbin/awslogs-nanny > /dev/null 2>&1)
+Mar 20 08:25:01 ip-172-31-36-190 CROND[28451]: (root) CMD (clearStaleLogPublishingRecords.py)

@@ -1,0 +1,270 @@
+[2020-03-20T07:02:44.295Z] INFO  [2856]  - [Initialization] : Starting activity...
+[2020-03-20T07:02:44.295Z] INFO  [2856]  - [Initialization/AddonsBefore] : Starting activity...
+[2020-03-20T07:02:44.295Z] INFO  [2856]  - [Initialization/AddonsBefore/InstallCWLAgent] : Starting activity...
+[2020-03-20T07:02:44.295Z] INFO  [2856]  - [Initialization/AddonsBefore/InstallCWLAgent/01-install-cwl-agent.sh] : Starting activity...
+[2020-03-20T07:02:46.675Z] INFO  [2856]  - [Initialization/AddonsBefore/InstallCWLAgent/01-install-cwl-agent.sh] : Completed activity. Result:
+  + grep -iq 'Amazon Linux' /etc/issue
+  + yum install -y awslogs
+  Loaded plugins: priorities, update-motd, upgrade-helper
+  Repodata is over 2 weeks old. Install yum-cron? Or run: yum makecache fast
+  Resolving Dependencies
+  --> Running transaction check
+  ---> Package awslogs.noarch 0:1.1.4-1.12.amzn1 will be installed
+  --> Processing Dependency: aws-cli-plugin-cloudwatch-logs(python27) for package: awslogs-1.1.4-1.12.amzn1.noarch
+  --> Running transaction check
+  ---> Package aws-cli-plugin-cloudwatch-logs.noarch 0:1.4.4-1.16.amzn1 will be installed
+  --> Finished Dependency Resolution
+  
+  Dependencies Resolved
+  
+  ================================================================================
+   Package                          Arch     Version            Repository   Size
+  ================================================================================
+  Installing:
+   awslogs                          noarch   1.1.4-1.12.amzn1   amzn-main   9.2 k
+  Installing for dependencies:
+   aws-cli-plugin-cloudwatch-logs   noarch   1.4.4-1.16.amzn1   amzn-main    71 k
+  
+  Transaction Summary
+  ================================================================================
+  Install  1 Package (+1 Dependent package)
+  
+  Total download size: 81 k
+  Installed size: 246 k
+  Downloading packages:
+  --------------------------------------------------------------------------------
+  Total                                              668 kB/s |  81 kB  00:00     
+  Running transaction check
+  Running transaction test
+  Transaction test succeeded
+  Running transaction
+    Installing : aws-cli-plugin-cloudwatch-logs-1.4.4-1.16.amzn1.noarch       1/2 
+    Installing : awslogs-1.1.4-1.12.amzn1.noarch                              2/2 
+    Verifying  : awslogs-1.1.4-1.12.amzn1.noarch                              1/2 
+    Verifying  : aws-cli-plugin-cloudwatch-logs-1.4.4-1.16.amzn1.noarch       2/2 
+  
+  Installed:
+    awslogs.noarch 0:1.1.4-1.12.amzn1                                             
+  
+  Dependency Installed:
+    aws-cli-plugin-cloudwatch-logs.noarch 0:1.4.4-1.16.amzn1                      
+  
+  Complete!
+  + cat
+  ++ sed 's/.$//'
+  ++ curl 169.254.169.254/latest/meta-data/placement/availability-zone
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+    0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    15  100    15    0     0   7500      0 --:--:-- --:--:-- --:--:-- 15000
+  + region=ap-northeast-2
+  + sed -i -e 's/region = .*/region = ap-northeast-2/g' /etc/awslogs/awscli.conf
+  + /opt/elasticbeanstalk/bin/log-conf -n awslogs -l/var/log/awslogs.log
+[2020-03-20T07:02:46.675Z] INFO  [2856]  - [Initialization/AddonsBefore/InstallCWLAgent] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/addons/logstreaming/hooks/install.
+[2020-03-20T07:02:46.675Z] INFO  [2856]  - [Initialization/AddonsBefore] : Completed activity.
+[2020-03-20T07:02:46.675Z] INFO  [2856]  - [Initialization/PreInitStage0] : Starting activity...
+[2020-03-20T07:02:46.676Z] INFO  [2856]  - [Initialization/PreInitStage0/DownloadSourceBundle] : Starting activity...
+[2020-03-20T07:02:46.992Z] INFO  [2856]  - [Initialization/PreInitStage0/DownloadSourceBundle] : Completed activity. Result:
+  [2020-03-20T07:02:46.782Z] INFO  [2923]  : Application version will be saved to /opt/elasticbeanstalk/deploy/appsource.
+  [2020-03-20T07:02:46.782Z] INFO  [2923]  : Using manifest cache with deployment ID 1 and serial 1.
+  [2020-03-20T07:02:46.782Z] INFO  [2923]  : Attempting to download application source bundle to: '/opt/elasticbeanstalk/deploy/appsource/source_bundle'.
+  [2020-03-20T07:02:46.782Z] INFO  [2923]  : Using computed s3 key.
+  [2020-03-20T07:02:46.905Z] INFO  [2923]  : Downloading from bucket 'elasticbeanstalk-ap-northeast-2-825266357920' with key 'resources/environments/e-rm2mqejgvt/_runtime/_versions/eeflow/Sample Application' and version '' to '/opt/elasticbeanstalk/deploy/appsource/source_bundle'.
+  [2020-03-20T07:02:46.965Z] INFO  [2923]  : Size: 2328, ETag: "979648d9d28cedf2a2c81dad118a1c12", Metadata: {"environmentid"=>"e-rm2mqejgvt", "requestid"=>"8a992f50-6326-4c66-bf40-f72bd99ec49e"}.
+  [2020-03-20T07:02:46.979Z] INFO  [2923]  : Downloaded size: 2328.
+  [2020-03-20T07:02:46.979Z] INFO  [2923]  : Successfully downloaded to '/opt/elasticbeanstalk/deploy/appsource/source_bundle'.
+[2020-03-20T07:02:46.993Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook] : Starting activity...
+[2020-03-20T07:02:46.993Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/01_install_xray_daemon.sh] : Starting activity...
+[2020-03-20T07:02:47.105Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/01_install_xray_daemon.sh] : Completed activity. Result:
+  Executing: /bin/chown -R xray:xray /var/log/xray
+  
+[2020-03-20T07:02:47.105Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/01setuplogs.sh] : Starting activity...
+[2020-03-20T07:02:47.322Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/01setuplogs.sh] : Completed activity. Result:
+  + mkdir -p /opt/elasticbeanstalk/tasks/taillogs.d /opt/elasticbeanstalk/tasks/sytemtaillogs.d /opt/elasticbeanstalk/tasks/bundlelogs.d /opt/elasticbeanstalk/tasks/publishlogs.d
+  + /opt/elasticbeanstalk/bin/log-conf -n python '-l/opt/python/log/*' -t taillogs,systemtaillogs,bundlelogs
+  + /opt/elasticbeanstalk/bin/log-conf -n python-app '-l/opt/python/log/app.out.*' -t publishlogs
+  + /opt/elasticbeanstalk/bin/log-conf -n supervisord '-l/opt/python/log/supervisord.log.*' -t publishlogs
+  + /opt/elasticbeanstalk/bin/log-conf -nhttpd '-l/var/log/httpd/*' -f /opt/elasticbeanstalk/containerfiles/beanstalkhttpd
+[2020-03-20T07:02:47.323Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/02installpackages.sh] : Starting activity...
+[2020-03-20T07:02:47.418Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/02installpackages.sh] : Completed activity. Result:
+  ++ /opt/elasticbeanstalk/bin/get-config container -k python_version
+  + PYTHON_VERSION=3.6
+  + is_baked python_packages
+  + [[ -f /etc/elasticbeanstalk/baking_manifest/python_packages ]]
+  + true
+  + echo python common packages have already been installed. Skipping installation.
+  python common packages have already been installed. Skipping installation.
+  + '[' 3.6 = 2.6 ']'
+  + '[' 3.6 = 2.7 ']'
+  + '[' 3.6 = 3.4 ']'
+  + '[' 3.6 = 3.6 ']'
+  + is_baked python36_packages
+  + [[ -f /etc/elasticbeanstalk/baking_manifest/python36_packages ]]
+  + true
+  + echo python-3.6 has already been installed. Skipping installation.
+  python-3.6 has already been installed. Skipping installation.
+  + is_baked python_libs
+  + [[ -f /etc/elasticbeanstalk/baking_manifest/python_libs ]]
+  + true
+  + echo python libs has already been installed. Skipping installation.
+  python libs has already been installed. Skipping installation.
+[2020-03-20T07:02:47.418Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/03rmdefaultconfig.sh] : Starting activity...
+[2020-03-20T07:02:47.422Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/03rmdefaultconfig.sh] : Completed activity. Result:
+  + [[ true == \t\r\u\e ]]
+  + rm -f /etc/httpd/conf.d/autoindex.conf /etc/httpd/conf.d/notrace.conf /etc/httpd/conf.d/README /etc/httpd/conf.d/userdir.conf /etc/httpd/conf.d/welcome.conf
+  + rm -f /etc/logrotate.d/httpd
+[2020-03-20T07:02:47.422Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/04installconfig.py] : Starting activity...
+[2020-03-20T07:02:53.552Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/04installconfig.py] : Completed activity. Result:
+  Using base prefix '/usr'
+  New python executable in /opt/python/run/baselinenv/bin/python36
+  Also creating executable in /opt/python/run/baselinenv/bin/python
+  Installing setuptools, pip, wheel...done.
+  Running virtualenv with interpreter /usr/bin/python36
+  Using base prefix '/usr'
+  New python executable in /opt/python/run/venv/bin/python3.6
+  Also creating executable in /opt/python/run/venv/bin/python
+  Installing setuptools, pip, wheel...done.
+  Running virtualenv with interpreter /usr/bin/python3.6
+  Requirement already up-to-date: pip in /opt/python/run/venv/lib/python3.6/site-packages
+  Requirement already up-to-date: setuptools in /opt/python/run/venv/lib/python3.6/site-packages
+[2020-03-20T07:02:53.552Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/05wsgiuser.sh] : Starting activity...
+[2020-03-20T07:02:53.677Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/05wsgiuser.sh] : Completed activity. Result:
+  ++ /opt/elasticbeanstalk/bin/get-config container -k app_user
+  + APP_USER=wsgi
+  + id -u wsgi
+  id: wsgi: no such user
+  + adduser --system --user-group wsgi -s /sbin/nologin
+[2020-03-20T07:02:53.677Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/06startsupervisor.sh] : Starting activity...
+[2020-03-20T07:02:53.685Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/06startsupervisor.sh] : Completed activity. Result:
+  ++ pgrep supervisord
+  + '[' '!' ']'
+  + start supervisord
+  supervisord start/running, process 3046
+[2020-03-20T07:02:53.686Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/07updatepermissions.sh] : Starting activity...
+[2020-03-20T07:02:53.892Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/07updatepermissions.sh] : Completed activity. Result:
+  ++ /opt/elasticbeanstalk/bin/get-config container -k app_user
+  + APP_USER=wsgi
+  + chgrp wsgi /opt/python/log
+  + chmod 775 /opt/python/log
+  + chmod -R 755 /var/log
+[2020-03-20T07:02:53.892Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/99cleanup.sh] : Starting activity...
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook/99cleanup.sh] : Completed activity. Result:
+  + rm -f /etc/logrotate.d/httpd
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization/PreInitStage0/PreInitHook] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/hooks/preinit.
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization/PreInitStage0] : Completed activity. Result:
+  Initialization - Command CMD-PreInit stage 0 completed
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization/AddonsAfter] : Starting activity...
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization/AddonsAfter] : Completed activity.
+[2020-03-20T07:02:53.900Z] INFO  [2856]  - [Initialization] : Completed activity. Result:
+  Initialization - Command CMD-PreInit succeeded
+[2020-03-20T07:03:19.253Z] INFO  [3201]  - [Application deployment Sample Application@1] : Starting activity...
+[2020-03-20T07:03:19.253Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore] : Starting activity...
+[2020-03-20T07:03:19.254Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore/ConfigCWLAgent] : Starting activity...
+[2020-03-20T07:03:19.254Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore/ConfigCWLAgent/10-config.sh] : Starting activity...
+[2020-03-20T07:03:19.374Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore/ConfigCWLAgent/10-config.sh] : Completed activity. Result:
+  Log streaming option setting is not specified, ignore cloudwatch logs setup.
+  
+  Disabled log streaming.
+[2020-03-20T07:03:19.374Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore/ConfigCWLAgent] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/addons/logstreaming/hooks/config.
+[2020-03-20T07:03:19.374Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsBefore] : Completed activity.
+[2020-03-20T07:03:19.764Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0] : Starting activity...
+[2020-03-20T07:03:19.765Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdLogRotation] : Starting activity...
+[2020-03-20T07:03:19.770Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdLogRotation] : Completed activity. Result:
+  ["/etc/cron.hourly/cron.logrotate.elasticbeanstalk.healthd.conf"]
+[2020-03-20T07:03:19.771Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdHTTPDLogging] : Starting activity...
+[2020-03-20T07:03:19.771Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdHTTPDLogging] : Completed activity.
+[2020-03-20T07:03:19.771Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdNginxLogging] : Starting activity...
+[2020-03-20T07:03:19.771Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/HealthdNginxLogging] : Completed activity.
+[2020-03-20T07:03:19.771Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild] : Starting activity...
+[2020-03-20T07:03:20.167Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild/Infra-EmbeddedPreBuild] : Starting activity...
+[2020-03-20T07:03:20.170Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild/Infra-EmbeddedPreBuild/prebuild_0_eeflow] : Starting activity...
+[2020-03-20T07:03:20.170Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild/Infra-EmbeddedPreBuild/prebuild_0_eeflow] : Completed activity.
+[2020-03-20T07:03:20.170Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild/Infra-EmbeddedPreBuild] : Completed activity.
+[2020-03-20T07:03:20.188Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPreBuild] : Completed activity.
+[2020-03-20T07:03:20.188Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook] : Starting activity...
+[2020-03-20T07:03:20.188Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/01_configure_xray.sh] : Starting activity...
+[2020-03-20T07:03:20.293Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/01_configure_xray.sh] : Completed activity.
+[2020-03-20T07:03:20.293Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/01new.py] : Starting activity...
+[2020-03-20T07:03:20.608Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/01new.py] : Completed activity.
+[2020-03-20T07:03:20.608Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/02unzip.py] : Starting activity...
+[2020-03-20T07:03:20.927Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/02unzip.py] : Completed activity. Result:
+  Archive:  /opt/elasticbeanstalk/deploy/appsource/source_bundle
+    inflating: /opt/python/ondeck/app/application.py  
+    inflating: /opt/python/ondeck/app/cron.yaml  
+[2020-03-20T07:03:20.927Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/03deploy.py] : Starting activity...
+[2020-03-20T07:03:21.150Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/03deploy.py] : Completed activity.
+[2020-03-20T07:03:21.150Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/04configen.py] : Starting activity...
+[2020-03-20T07:03:22.375Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook/04configen.py] : Completed activity.
+[2020-03-20T07:03:22.375Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/AppDeployPreHook] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/hooks/appdeploy/pre.
+[2020-03-20T07:03:22.375Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPostBuild] : Starting activity...
+[2020-03-20T07:03:22.772Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPostBuild/Infra-EmbeddedPostBuild] : Starting activity...
+[2020-03-20T07:03:22.772Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPostBuild/Infra-EmbeddedPostBuild] : Completed activity.
+[2020-03-20T07:03:22.787Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/EbExtensionPostBuild] : Completed activity.
+[2020-03-20T07:03:22.787Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/InfraCleanEbExtension] : Starting activity...
+[2020-03-20T07:03:22.788Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0/InfraCleanEbExtension] : Completed activity. Result:
+  Cleaned ebextensions subdirectories from /opt/python/ondeck/app.
+[2020-03-20T07:03:22.788Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage0] : Completed activity. Result:
+  Application deployment - Command CMD-Startup stage 0 completed
+[2020-03-20T07:03:22.788Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1] : Starting activity...
+[2020-03-20T07:03:22.788Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook] : Starting activity...
+[2020-03-20T07:03:22.789Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/01flip.py] : Starting activity...
+[2020-03-20T07:03:27.414Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/01flip.py] : Completed activity. Result:
+  httpd: stopped
+  httpd: started
+  httpd                            RUNNING   pid 3343, uptime 0:00:03
+[2020-03-20T07:03:27.414Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/01stop_xray.sh] : Starting activity...
+[2020-03-20T07:03:29.533Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/01stop_xray.sh] : Completed activity. Result:
+  Executing: if ( initctl status xray | grep start ); then initctl stop xray; fi
+  xray start/running, process 2262
+  xray stop/waiting
+[2020-03-20T07:03:29.533Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/02create_pids_for_monitoring.sh] : Starting activity...
+[2020-03-20T07:03:29.637Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/02create_pids_for_monitoring.sh] : Completed activity. Result:
+  + chmod 0755 /var/run/httpd
+  + /opt/elasticbeanstalk/bin/healthd-track-pidfile --proxy httpd
+  + /opt/elasticbeanstalk/bin/healthd-track-pidfile --name application --location /opt/python/run/supervisord.pid
+[2020-03-20T07:03:29.637Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/02start_xray.sh] : Starting activity...
+[2020-03-20T07:03:29.744Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook/02start_xray.sh] : Completed activity.
+[2020-03-20T07:03:29.744Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployEnactHook] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/hooks/appdeploy/enact.
+[2020-03-20T07:03:29.744Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployPostHook] : Starting activity...
+[2020-03-20T07:03:29.744Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/AppDeployPostHook] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/hooks/appdeploy/post.
+[2020-03-20T07:03:29.744Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/PostInitHook] : Starting activity...
+[2020-03-20T07:03:29.745Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/PostInitHook/01processmgrstart.sh] : Starting activity...
+[2020-03-20T07:03:29.749Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/PostInitHook/01processmgrstart.sh] : Completed activity. Result:
+  + pgrep supervisord
+  3046
+[2020-03-20T07:03:29.749Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1/PostInitHook] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/hooks/postinit.
+[2020-03-20T07:03:29.750Z] INFO  [3201]  - [Application deployment Sample Application@1/StartupStage1] : Completed activity. Result:
+  Application deployment - Command CMD-Startup stage 1 completed
+[2020-03-20T07:03:29.750Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter] : Starting activity...
+[2020-03-20T07:03:29.750Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter/ConfigLogRotation] : Starting activity...
+[2020-03-20T07:03:29.750Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter/ConfigLogRotation/10-config.sh] : Starting activity...
+[2020-03-20T07:03:29.828Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter/ConfigLogRotation/10-config.sh] : Completed activity. Result:
+  Disabled forced hourly log rotation.
+[2020-03-20T07:03:29.828Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter/ConfigLogRotation] : Completed activity. Result:
+  Successfully execute hooks in directory /opt/elasticbeanstalk/addons/logpublish/hooks/config.
+[2020-03-20T07:03:29.828Z] INFO  [3201]  - [Application deployment Sample Application@1/AddonsAfter] : Completed activity.
+[2020-03-20T07:03:29.828Z] INFO  [3201]  - [Application deployment Sample Application@1] : Completed activity. Result:
+  Application deployment - Command CMD-Startup succeeded
+[2020-03-20T08:23:56.540Z] INFO  [28406] - [CMD-TailLogs] : Starting activity...
+[2020-03-20T08:23:56.540Z] INFO  [28406] - [CMD-TailLogs/AddonsBefore] : Starting activity...
+[2020-03-20T08:23:56.541Z] INFO  [28406] - [CMD-TailLogs/AddonsBefore] : Completed activity.
+[2020-03-20T08:23:56.541Z] INFO  [28406] - [CMD-TailLogs/TailLogs] : Starting activity...
+[2020-03-20T08:23:56.541Z] INFO  [28406] - [CMD-TailLogs/TailLogs/TailLogs] : Starting activity...
+[2020-03-20T08:23:56.724Z] INFO  [28406] - [CMD-TailLogs/TailLogs/TailLogs] : Completed activity.
+[2020-03-20T08:23:56.724Z] INFO  [28406] - [CMD-TailLogs/TailLogs] : Completed activity. Result:
+  CMD-TailLogs - stage 0 - Command CMD-TailLogs stage 0 completed
+[2020-03-20T08:23:56.724Z] INFO  [28406] - [CMD-TailLogs/AddonsAfter] : Starting activity...
+[2020-03-20T08:23:56.724Z] INFO  [28406] - [CMD-TailLogs/AddonsAfter] : Completed activity.
+[2020-03-20T08:23:56.724Z] INFO  [28406] - [CMD-TailLogs] : Completed activity. Result:
+  CMD-TailLogs - Command CMD-TailLogs succeeded
+[2020-03-20T08:25:31.733Z] INFO  [28473] - [CMD-BundleLogs] : Starting activity...
+[2020-03-20T08:25:31.734Z] INFO  [28473] - [CMD-BundleLogs/AddonsBefore] : Starting activity...
+[2020-03-20T08:25:31.734Z] INFO  [28473] - [CMD-BundleLogs/AddonsBefore] : Completed activity.
+[2020-03-20T08:25:31.734Z] INFO  [28473] - [CMD-BundleLogs/BundleLogs] : Starting activity...
+[2020-03-20T08:25:31.734Z] INFO  [28473] - [CMD-BundleLogs/BundleLogs/BundleLogs] : Starting activity...

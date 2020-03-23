@@ -1,0 +1,18 @@
+[Fri Mar 20 07:02:55.503632 2020] [suexec:notice] [pid 3130] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Mar 20 07:02:55.519408 2020] [http2:warn] [pid 3130] AH10034: The mpm module (prefork.c) is not supported by mod_http2. The mpm determines how things are processed in your server. HTTP/2 has more demands in this regard and the currently selected mpm will just not do. This is an advisory warning. Your server will continue to work, but the HTTP/2 protocol will be inactive.
+[Fri Mar 20 07:02:55.519421 2020] [http2:warn] [pid 3130] AH02951: mod_ssl does not seem to be enabled
+[Fri Mar 20 07:02:55.519861 2020] [lbmethod_heartbeat:notice] [pid 3130] AH02282: No slotmem from mod_heartmonitor
+[Fri Mar 20 07:02:55.519907 2020] [:warn] [pid 3130] mod_wsgi: Compiled for Python/3.6.2.
+[Fri Mar 20 07:02:55.519911 2020] [:warn] [pid 3130] mod_wsgi: Runtime using Python/3.6.10.
+[Fri Mar 20 07:02:55.521855 2020] [mpm_prefork:notice] [pid 3130] AH00163: Apache/2.4.41 (Amazon) mod_wsgi/3.5 Python/3.6.10 configured -- resuming normal operations
+[Fri Mar 20 07:02:55.521872 2020] [core:notice] [pid 3130] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Fri Mar 20 07:03:23.496866 2020] [mpm_prefork:notice] [pid 3130] AH00169: caught SIGTERM, shutting down
+[Fri Mar 20 07:03:24.549538 2020] [suexec:notice] [pid 3343] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Mar 20 07:03:24.564935 2020] [so:warn] [pid 3343] AH01574: module wsgi_module is already loaded, skipping
+[Fri Mar 20 07:03:24.567166 2020] [http2:warn] [pid 3343] AH10034: The mpm module (prefork.c) is not supported by mod_http2. The mpm determines how things are processed in your server. HTTP/2 has more demands in this regard and the currently selected mpm will just not do. This is an advisory warning. Your server will continue to work, but the HTTP/2 protocol will be inactive.
+[Fri Mar 20 07:03:24.567175 2020] [http2:warn] [pid 3343] AH02951: mod_ssl does not seem to be enabled
+[Fri Mar 20 07:03:24.567730 2020] [lbmethod_heartbeat:notice] [pid 3343] AH02282: No slotmem from mod_heartmonitor
+[Fri Mar 20 07:03:24.567794 2020] [:warn] [pid 3343] mod_wsgi: Compiled for Python/3.6.2.
+[Fri Mar 20 07:03:24.567799 2020] [:warn] [pid 3343] mod_wsgi: Runtime using Python/3.6.10.
+[Fri Mar 20 07:03:24.569995 2020] [mpm_prefork:notice] [pid 3343] AH00163: Apache/2.4.41 (Amazon) mod_wsgi/3.5 Python/3.6.10 configured -- resuming normal operations
+[Fri Mar 20 07:03:24.570009 2020] [core:notice] [pid 3343] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
