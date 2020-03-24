@@ -1,7 +1,8 @@
+import json
+from datetime import date, datetime, time
 from django.contrib.auth.models import User
-from django.db import transaction
-from django.db.models import Q
-from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.db.models import Q, QuerySet
+from django.http import HttpResponse, HttpRequest
 from typing import List
 
 from rest_framework import status
@@ -9,12 +10,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from rest_framework.views import APIView
-
 from ea.models import Push, Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
 from ea.serializers import DefaultUsersSerializer, SignUsersSerializer, DocumentSerializer, PushSerializer
 from ea.services import DocumentServices, Approvers
-import json
 
 from employee.models import Department, Employee
 
@@ -92,7 +90,7 @@ def get_defaultUsers(request: Request, username: str):
     user = User.objects.get(username=username)
     defaulSignList = DefaulSignList.objects.filter(user=user)
     serializer = DefaultUsersSerializer(defaulSignList, many=True)
-    return Response(data=serializer.data,status=status.HTTP_200_OK)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -100,14 +98,14 @@ def get_departmentUsers(request: Request, department_name: str):
     department = Department.objects.get(name=department_name)
     employees = Employee.objects.filter(department=department)
     serializer = SignUsersSerializer(employees, many=True)
-    return Response(data=serializer.data,status=status.HTTP_200_OK)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def allUsers(request: Request):
     employees = Employee.objects.all()
     serializer = SignUsersSerializer(employees, many=True)
-    return Response(data=serializer.data,status=status.HTTP_200_OK)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -133,7 +131,20 @@ def rejected_document(request: Request, username: str):
 
 @api_view(['GET'])
 def sign_document(request: Request, username: str):
-    documents = Document.objects.filter(Q(signs__result=0), Q(signs__user__username=username))
+    start_date: list = request.query_params.get('startDate').split('-')
+    end_date: list = request.query_params.get('endDate').split('-')
+    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    search: str = request.query_params.get('search')
+    documents: QuerySet = Document.objects.filter(
+        Q(signs__result=0),
+        Q(signs__user__username=username),
+        Q(created__range=(datetime.combine(start_date, time.min),
+                          datetime.combine(end_date, time.max))))
+
+    if search:
+        documents = documents.filter(title__contains=search)
+
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -152,4 +163,3 @@ def do_sign(request: Request):
     # documents = Document.objects.filter(Q(signs__result=0), Q(signs__user__username=username))
     # serializer = DocumentSerializer(documents, many=True)
     return Response(status=status.HTTP_200_OK)
-

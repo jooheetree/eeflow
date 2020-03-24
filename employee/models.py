@@ -10,13 +10,14 @@ POSITION_ORDER = [
     {'name': '대리', 'order': 30},
     {'name': '과장', 'order': 40},
     {'name': '차장', 'order': 50},
-    {'name': '이사보', 'order': 60},
-    {'name': '상무이사', 'order': 70},
-    {'name': '전무이사', 'order': 80},
-    {'name': '부사장', 'order': 90},
-    {'name': '사장', 'order': 100},
-    {'name': '회장', 'order': 110},
-    {'name': '조장', 'order': 120},
+    {'name': '부장', 'order': 60},
+    {'name': '이사보', 'order': 70},
+    {'name': '상무이사', 'order': 80},
+    {'name': '전무이사', 'order': 90},
+    {'name': '부사장', 'order': 100},
+    {'name': '사장', 'order': 110},
+    {'name': '회장', 'order': 120},
+    {'name': '조장', 'order': 130},
 ]
 
 DEPARTMENT_ORDER = [
@@ -27,7 +28,6 @@ DEPARTMENT_ORDER = [
     {'name': '[사료]영업팀', 'order': 350},
     {'name': '[사료]연구개발팀', 'order': 360},
     {'name': '[사료]임원', 'order': 370},
-
     {'name': '[식품]관리팀', 'order': 210},
     {'name': '[식품]생산팀', 'order': 220},
     {'name': '[식품]영업팀', 'order': 230},

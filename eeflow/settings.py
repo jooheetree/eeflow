@@ -107,9 +107,6 @@ if 'RDS_HOSTNAME' in os.environ:
         }
     }
 else:
-    print(os.environ['RDS_HOSTNAME'])
-    print(os.environ)
-    print('db.sqlite3')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
