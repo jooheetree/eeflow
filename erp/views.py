@@ -15,7 +15,7 @@ from erp.services import OracleService
 @api_view(['GET'])
 def voucher_list(request: Request):
     columns = [
-        {'ROWNUM': 'id'},
+        {'ids': 'id'},
         {'rpicu': 'batchNumber'},
         {'rpdgj': 'gl_ymd'},
         {'RPALPH': 'supplyNumber'},
@@ -32,7 +32,7 @@ def voucher_list(request: Request):
 @api_view(['GET'])
 def voucher_list_batch_number(request: Request, batch_number: int):
     columns = [
-        {'ROWNUM': 'id'},
+        {'ids': 'id'},
         {'rpicu': 'batchNumber'},
         {'rpdgj': 'gl_ymd'},
         {'RPALPH': 'supplyNumber'},

@@ -74,9 +74,20 @@ def create_document(request: Request):
     batch_number: int = request.data.get('batch_number')
     approvers: str = request.data.get('approvers')
     approvers: Approvers = json.loads(approvers)
-    attachments: list = request.data.getlist('attachments')
+    attachments_counts: list = request.data.getlist('counts')
+    attachments_files: list = request.data.getlist('files')
+    attachments_invoices: list = request.data.getlist('invoices')
+    attachments: list = []
+
+    for i in range(len(attachments_invoices)):
+        if attachments_files:
+            attachments.append(attachments_files[0:int(attachments_counts[i])])
+            del attachments_files[0:int(attachments_counts[i])]
+
+    del attachments_files, attachments_counts
 
     DocumentServices(attachments=attachments,
+                     attachments_invoices=attachments_invoices,
                      title=title,
                      batch_number=batch_number,
                      approvers=approvers,

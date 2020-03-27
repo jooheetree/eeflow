@@ -4,11 +4,14 @@ from django.core.files.storage import FileSystemStorage
 from django.db import transaction
 from django.db.models import Q
 
-from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
+from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList, Invoice
 from employee.models import Employee
 import json
 
 from typing import List
+
+from erp.services import OracleService
+
 Approvers = List[dict]
 
 
@@ -23,6 +26,7 @@ def update_batch_number(batch_number: int):
 class DocumentServices:
     def __init__(self, **kwargs):
         attachments: list = kwargs.get('attachments')
+        attachments_invoices: list = kwargs.get('attachments_invoices')
         title: str = kwargs.get('title')
         batch_number: int = kwargs.get('batch_number')
         approvers: Approvers = kwargs.get('approvers')
@@ -30,7 +34,7 @@ class DocumentServices:
 
         document = self.create_document(title, author, approvers, batch_number)
 
-        self.create_attachments(attachments, document)
+        self.create_attachments(attachments, attachments_invoices, document)
 
         DefaulSignList.objects.filter(user=author).delete()
 
@@ -56,27 +60,35 @@ class DocumentServices:
             batch_number=batch_number
         )
 
-    def create_attachments(self, attachments: list, document: Document) -> None:
-        for attachment in attachments:
-            fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
-            filename = fs.save(attachment.name, attachment)
-            is_img = False
-            is_pdf = False
+    def create_attachments(self, attachments: list, attachments_invoices: list, document: Document) -> None:
+        for i, invoice_attachments in enumerate(attachments):
+            invoice_id: str = attachments_invoices[i]
+            invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
+            document_temp: dict = {'document': document}
+            invoice_data = {**invoices[0], **document_temp}
+            invoice = Invoice.objects.create(**invoice_data)
 
-            if 'image' in attachment.content_type:
-                is_img = True
+            for attachment in invoice_attachments:
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
+                filename = fs.save(attachment.name, attachment)
+                is_img = False
+                is_pdf = False
 
-            if 'pdf' in attachment.content_type:
-                is_pdf = True
+                if 'image' in attachment.content_type:
+                    is_img = True
 
-            Attachment.objects.create(
-                document=document,
-                title=filename,
-                size=attachment.size,
-                path='attachment/' + filename,
-                isImg=is_img,
-                isPdf=is_pdf
-            )
+                if 'pdf' in attachment.content_type:
+                    is_pdf = True
+
+                Attachment.objects.create(
+                    invoice=invoice,
+                    document=document,
+                    title=filename,
+                    size=attachment.size,
+                    path='attachment/' + filename,
+                    isImg=is_img,
+                    isPdf=is_pdf
+                )
 
     def create_sign(self, user: User, seq: int, document: Document) -> None:
         result = Sign.get_result_type_by_seq(seq)

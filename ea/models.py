@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from employee.models import Employee, Department
+from erp.services import OracleService
 
 DELETE_STATE_CHOICES = (
     ('Y', '삭제됨'),
@@ -109,8 +110,102 @@ class Document(TimeStampedModel):
         return f'{self.title}({self.author.first_name})'
 
 
+class Invoice(TimeStampedModel):
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='invoices')
+    IDS = models.CharField(max_length=100)
+    RPSEQ = models.CharField(max_length=10)
+    RPJELN = models.CharField(max_length=10)
+    RPDOC = models.CharField(max_length=50)
+    RPICU = models.CharField(max_length=30)
+    RPICUT = models.CharField(max_length=10)
+    RPDCT = models.CharField(max_length=10)
+    RPCRCD = models.CharField(max_length=10)
+    RPTAX = models.CharField(max_length=50, null=True, blank=True)
+    RPALPH = models.CharField(max_length=255, null=True, blank=True)
+    RPDGJ = models.CharField(max_length=10)
+    RPDSVJ = models.CharField(max_length=10)
+    RPEXR1 = models.CharField(max_length=10, null=True, blank=True)
+    RPTXA1 = models.CharField(max_length=10, null=True, blank=True)
+    RPPO = models.CharField(max_length=50, null=True, blank=True)
+    RPCRR = models.CharField(max_length=50, null=True, blank=True)
+    RPMCU = models.CharField(max_length=20)
+    RPOBJ = models.CharField(max_length=20)
+    RPSUB = models.CharField(max_length=20)
+    RPASID = models.CharField(max_length=255, null=True, blank=True)
+    RPDC = models.CharField(max_length=50, null=True, blank=True)
+    RPZ5DEBITAT = models.IntegerField()
+    RPZ5CREDITAT = models.IntegerField()
+    RPAMT = models.IntegerField()
+    RPZ5FDEDIT = models.IntegerField()
+    RPZ5FCREDIT = models.IntegerField()
+    RPDL02 = models.CharField(max_length=255)
+    RPSFX = models.CharField(max_length=10)
+    RPRMK = models.CharField(max_length=500)
+    RPPDCT = models.CharField(max_length=20, null=True, blank=True)
+    RPSBLT = models.CharField(max_length=255, null=True, blank=True)
+    RPADDN = models.CharField(max_length=255, null=True, blank=True)
+    RPPYE = models.CharField(max_length=20)
+    RPDL03 = models.CharField(max_length=255)
+    RPOST = models.CharField(max_length=255, null=True, blank=True)
+    RPAN8 = models.CharField(max_length=20, null=True, blank=True)
+    RPGLC = models.CharField(max_length=10, null=True, blank=True)
+    RPTORG = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.RPDGJ}({self.RPRMK})'
+
+    QUERY_COLUMS = [
+        {'IDS': 'IDS'},
+        {'RPSEQ': 'RPSEQ'},
+        {'RPJELN': 'RPJELN'},
+        {'RPDOC': 'RPDOC'},
+        {'RPICU': 'RPICU'},
+        {'RPICUT': 'RPICUT'},
+        {'RPDCT': 'RPDCT'},
+        {'RPCRCD': 'RPCRCD'},
+        {'RPTAX': 'RPTAX'},
+        {'RPALPH': 'RPALPH'},
+        {'RPDGJ': 'RPDGJ'},
+        {'RPDSVJ': 'RPDSVJ'},
+        {'RPEXR1': 'RPEXR1'},
+        {'RPTXA1': 'RPTXA1'},
+        {'RPPO': 'RPPO'},
+        {'RPCRR': 'RPCRR'},
+        {'RPMCU': 'RPMCU'},
+        {'RPOBJ': 'RPOBJ'},
+        {'RPSUB': 'RPSUB'},
+        {'RPASID': 'RPASID'},
+        {'RPZ5DEBITAT': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT': 'RPZ5CREDITAT'},
+        {'RPAMT': 'RPAMT'},
+        {'RPZ5FDEDIT': 'RPZ5FDEDIT'},
+        {'RPZ5FCREDIT': 'RPZ5FCREDIT'},
+        {'RPDL02': 'RPDL02'},
+        {'RPSFX': 'RPSFX'},
+        {'RPRMK': 'RPRMK'},
+        {'RPPDCT': 'RPPDCT'},
+        {'RPSBLT': 'RPSBLT'},
+        {'RPADDN': 'RPADDN'},
+        {'RPPYE': 'RPPYE'},
+        {'RPDL03': 'RPDL03'},
+        {'RPOST': 'RPOST'},
+        {'RPAN8': 'RPAN8'},
+        {'RPGLC': 'RPGLC'},
+        {'RPTORG': 'RPTORG'},
+    ]
+
+    @staticmethod
+    def query_invoices(wheres: list):
+        columns = Invoice.QUERY_COLUMS
+        table = 'vap_voucher'
+        wheres = wheres
+        service = OracleService(columns, table, wheres)
+        return service.result
+
+
 class Attachment(TimeStampedModel):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='attachments')
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='attachments')
     title = models.CharField(max_length=255)
     size = models.PositiveIntegerField()
     path = models.FileField(upload_to='attachment/')
@@ -139,7 +234,7 @@ class Sign(TimeStampedModel):
     sign_date = models.DateTimeField(null=True, blank=True)
 
     def get_next_sign(self) -> Union['Sign', None]:
-        return self.__class__.objects.filter(document=self.document, seq=self.seq+1).first()
+        return self.__class__.objects.filter(document=self.document, seq=self.seq + 1).first()
 
     def get_stand_by_sign(self):
         return self.__class__.objects.filter(document=self.document, result='0').first()

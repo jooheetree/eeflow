@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.test import APIClient
 
 from employee.models import Position, Department, Employee, POSITION_ORDER, DEPARTMENT_ORDER
-from .models import Push, Document, Attachment, Sign, DefaulSignList, SIGN_TYPE
+from erp.services import OracleService
+from .models import Push, Document, Attachment, Sign, DefaulSignList, SIGN_TYPE, Invoice
 from pywebpush import webpush
 
 # class HomePageTest(TestCase):
@@ -145,6 +146,11 @@ class EaTest(InitData, TestCase):
 
         self.document_create()
 
+        invoices: list = Invoice.query_invoices([f'ROWNUM = 1'])
+        document = {'document': Document.objects.first()}
+        invoice_data = {**invoices[0], **document}
+        Invoice.objects.create(**invoice_data)
+
         self.attachment_create('test1', 20, '/attachment/test1.jpg')
         self.attachment_create('test2', 20, '/attachment/test2.jpg')
 
@@ -174,6 +180,7 @@ class EaTest(InitData, TestCase):
     def attachment_create(self, title: str, size: int, path: str) -> None:
         return Attachment.objects.create(
             document=Document.objects.first(),
+            invoice=Invoice.objects.first(),
             title=title,
             size=size,
             path=settings.MEDIA_URL + path
@@ -242,19 +249,25 @@ class EaTest(InitData, TestCase):
         create Document View Test
         """
         image1 = settings.MEDIA_ROOT + "/test/3.png"
-        pdf1 = settings.MEDIA_ROOT + "/test/test.pdf"
         upload_img1 = SimpleUploadedFile("test1.png", content=open(image1, "rb").read())
-        upload_pdf1 = SimpleUploadedFile("pdf1.pdf", content=open(pdf1, "rb").read())
         approvers = [
             {"id": "cyl20509", "type": 0},
             {"id": "jyy20510", "type": 0},
             {"id": "hck18106", "type": 0},
         ]
+
+        invoice: Invoice = Invoice.objects.first()
+        counts: list = [1]
+        files: list = [upload_img1]
+        invoices: list = [invoice.IDS]
+
         data = {
             "author": "swl21803",
             "batch_number": 3333,
             "title": "비료사업부 12월 고용보험료/7",
-            "attachments": [upload_img1, upload_pdf1],
+            "counts": counts,
+            "files": files,
+            "invoices": invoices,
             "approvers": json.dumps(approvers)
         }
 
@@ -289,7 +302,8 @@ class EaTest(InitData, TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_sign_document_view(self):
-        response: Response = self.drf_client.get('/ea/sign_document/' + self.user.username)
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/ea/sign_document/' + self.user.username, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_approve_or_deny_sign_view(self):
