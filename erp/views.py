@@ -14,15 +14,25 @@ from erp.services import OracleService
 
 @api_view(['GET'])
 def voucher_list(request: Request):
+    # columns = [
+    #     {'ids': 'id'},
+    #     {'rpicu': 'batchNumber'},
+    #     {'rpdgj': 'gl_ymd'},
+    #     {'RPALPH': 'supplyNumber'},
+    #     {'RPDL02': 'accountName'},
+    #     {'RPAMT / 100': 'price'},
+    #     {'RPRMK': 'bigo'},
+    #     {'RPTORG': 'author'},
+    # ]
     columns = [
         {'ids': 'id'},
-        {'rpicu': 'batchNumber'},
-        {'rpdgj': 'gl_ymd'},
-        {'RPALPH': 'supplyNumber'},
-        {'RPDL02': 'accountName'},
-        {'RPAMT / 100': 'price'},
-        {'RPRMK': 'bigo'},
-        {'RPTORG': 'author'},
+        {'RPICU': 'RPICU'},
+        {'RPDGJ': 'RPDGJ'},
+        {'RPALPH': 'RPALPH'},
+        {'RPDL02': 'RPDL02'},
+        {'RPAMT / 100': 'RPAMT'},
+        {'RPRMK': 'RPRMK'},
+        {'RPTORG': 'RPTORG'},
     ]
     table = 'vap_voucher'
     service = OracleService(columns, table)
@@ -31,15 +41,25 @@ def voucher_list(request: Request):
 
 @api_view(['GET'])
 def voucher_list_batch_number(request: Request, batch_number: int):
+    # columns = [
+    #     {'ids': 'id'},
+    #     {'rpicu': 'batchNumber'},
+    #     {'rpdgj': 'gl_ymd'},
+    #     {'RPALPH': 'supplyNumber'},
+    #     {'RPDL02': 'accountName'},
+    #     {'RPAMT / 100': 'price'},
+    #     {'RPRMK': 'bigo'},
+    #     {'RPTORG': 'author'},
+    # ]
     columns = [
         {'ids': 'id'},
-        {'rpicu': 'batchNumber'},
-        {'rpdgj': 'gl_ymd'},
-        {'RPALPH': 'supplyNumber'},
-        {'RPDL02': 'accountName'},
-        {'RPAMT / 100': 'price'},
-        {'RPRMK': 'bigo'},
-        {'RPTORG': 'author'},
+        {'RPICU': 'RPICU'},
+        {'RPDGJ': 'RPDGJ'},
+        {'RPALPH': 'RPALPH'},
+        {'RPDL02': 'RPDL02'},
+        {'RPAMT / 100': 'RPAMT'},
+        {'RPRMK': 'RPRMK'},
+        {'RPTORG': 'RPTORG'},
     ]
     table = 'vap_voucher'
     wheres = [f'rpicu = {batch_number}']

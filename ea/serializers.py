@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ea.models import DefaulSignList, Document, Attachment, Sign, Push
+from ea.models import DefaulSignList, Document, Attachment, Sign, Push, Invoice
 from employee.models import Employee
 
 
@@ -50,18 +50,26 @@ class SignSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class InvoiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Invoice
+        fields = '__all__'
+
+
 class DocumentSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author.first_name')
     department = serializers.CharField(source='author.employee.department.name')
     created = serializers.DateTimeField(format='%Y-%m-%d')
     doc_status = serializers.CharField(source='get_doc_status_display')
     attachments = AttachmentSerializer(read_only=True, many=True)
+    invoices = InvoiceSerializer(read_only=True, many=True)
     signs = SignSerializer(read_only=True, many=True)
 
     class Meta:
         model = Document
         fields = ['id', 'title', 'author', 'department', 'doc_status', 'created', 'batch_number',
-                  'attachments', 'signs']
+                  'attachments', 'invoices', 'signs']
 
 
 class PushSerializer(serializers.ModelSerializer):

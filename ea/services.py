@@ -27,6 +27,7 @@ class DocumentServices:
     def __init__(self, **kwargs):
         attachments: list = kwargs.get('attachments')
         attachments_invoices: list = kwargs.get('attachments_invoices')
+        attachments_counts: list = kwargs.get('attachments_counts')
         title: str = kwargs.get('title')
         batch_number: int = kwargs.get('batch_number')
         approvers: Approvers = kwargs.get('approvers')
@@ -34,7 +35,19 @@ class DocumentServices:
 
         document = self.create_document(title, author, approvers, batch_number)
 
-        self.create_attachments(attachments, attachments_invoices, document)
+        for invoice_id in attachments_invoices:
+            """
+            invoice and invoice's attachments create
+            """
+            invoice = self.create_invoice(invoice_id, document)
+
+            attachment_count = int(attachments_counts[0])
+            if attachment_count > 0:
+                invoice_attachments = attachments[0:attachment_count]
+                del attachments[0:attachment_count]
+                self.create_attachments(invoice_attachments, invoice, document)
+
+            attachments_counts.pop(0)
 
         DefaulSignList.objects.filter(user=author).delete()
 
@@ -60,35 +73,37 @@ class DocumentServices:
             batch_number=batch_number
         )
 
-    def create_attachments(self, attachments: list, attachments_invoices: list, document: Document) -> None:
-        for i, invoice_attachments in enumerate(attachments):
-            invoice_id: str = attachments_invoices[i]
-            invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
-            document_temp: dict = {'document': document}
-            invoice_data = {**invoices[0], **document_temp}
-            invoice = Invoice.objects.create(**invoice_data)
+    def create_attachments(self, attachments: list, invoice: Invoice, document: Document) -> None:
+        for attachment in attachments:
+            fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
+            filename = fs.save(attachment.name, attachment)
+            is_img = False
+            is_pdf = False
 
-            for attachment in invoice_attachments:
-                fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
-                filename = fs.save(attachment.name, attachment)
-                is_img = False
-                is_pdf = False
+            if 'image' in attachment.content_type:
+                is_img = True
 
-                if 'image' in attachment.content_type:
-                    is_img = True
+            if 'pdf' in attachment.content_type:
+                is_pdf = True
 
-                if 'pdf' in attachment.content_type:
-                    is_pdf = True
+            Attachment.objects.create(
+                invoice=invoice,
+                document=document,
+                title=filename,
+                size=attachment.size,
+                path='attachment/' + filename,
+                isImg=is_img,
+                isPdf=is_pdf
+            )
 
-                Attachment.objects.create(
-                    invoice=invoice,
-                    document=document,
-                    title=filename,
-                    size=attachment.size,
-                    path='attachment/' + filename,
-                    isImg=is_img,
-                    isPdf=is_pdf
-                )
+    def create_invoice(self, invoice_id: str, document: Document):
+        invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
+        document_temp: dict = {'document': document}
+        invoice_data = {**invoices[0], **document_temp}
+        invoice: Invoice = Invoice.objects.create(**invoice_data)
+        invoice.RPAMT = invoice.RPAMT / 100
+        invoice.save()
+        return invoice
 
     def create_sign(self, user: User, seq: int, document: Document) -> None:
         result = Sign.get_result_type_by_seq(seq)

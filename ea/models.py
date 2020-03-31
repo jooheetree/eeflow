@@ -140,7 +140,7 @@ class Invoice(TimeStampedModel):
     RPZ5FCREDIT = models.IntegerField()
     RPDL02 = models.CharField(max_length=255)
     RPSFX = models.CharField(max_length=10)
-    RPRMK = models.CharField(max_length=500)
+    RPRMK = models.CharField(max_length=500, null=True, blank=True)
     RPPDCT = models.CharField(max_length=20, null=True, blank=True)
     RPSBLT = models.CharField(max_length=255, null=True, blank=True)
     RPADDN = models.CharField(max_length=255, null=True, blank=True)
@@ -263,8 +263,9 @@ class Sign(TimeStampedModel):
 
     def approve_sign(self, comment: str) -> None:
         self.approve()
-        self.comment = comment
         self.sign_date = timezone.now()
+        if comment:
+            self.comment = comment
         self.save()
 
         next_sign = self.get_next_sign()
@@ -276,8 +277,9 @@ class Sign(TimeStampedModel):
 
     def deny_sign(self, comment: str) -> None:
         self.deny()
-        self.comment = comment
         self.sign_date = timezone.now()
+        if comment:
+            self.comment = comment
         self.save()
         self.document.finish_deny(f'[반려] {self.document.title}')
 
