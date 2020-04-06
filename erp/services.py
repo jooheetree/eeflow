@@ -41,7 +41,7 @@ class OracleService:
     def create_query(self, columns: list, table: str, wheres: list) -> str:
         select_query: str = 'select '
         from_query: str = f'from {table} '
-        where_query: str = "where rpsfx = 001"
+        where_query: str = "where 1 = 1 "
 
         if wheres:
             for where in wheres:
@@ -51,4 +51,4 @@ class OracleService:
             for k, v in column.items():
                 select_query += f'{k} as {v} ,'
 
-        return select_query[0:-1] + from_query + where_query
+        return select_query[0:-1] + from_query + where_query + 'order by RPICU desc , RPSEQ , RPSFX'

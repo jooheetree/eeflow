@@ -59,7 +59,7 @@ class Push(models.Model):
     def get_subscription_info(self) -> dict:
         return {"endpoint": self.endpoint, "keys": {"p256dh": self.p256dh, "auth": self.auth}}
 
-    def send_push(self, content):
+    def send_push(self, content: str) -> None:
         try:
             webpush(
                 subscription_info=self.get_subscription_info(),
@@ -113,7 +113,7 @@ class Document(TimeStampedModel):
 class Invoice(TimeStampedModel):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='invoices')
     IDS = models.CharField(max_length=100)
-    RPSEQ = models.CharField(max_length=10)
+    RPSEQ = models.IntegerField()
     RPJELN = models.CharField(max_length=10)
     RPDOC = models.CharField(max_length=50)
     RPICU = models.CharField(max_length=30)
@@ -236,7 +236,7 @@ class Sign(TimeStampedModel):
     def get_next_sign(self) -> Union['Sign', None]:
         return self.__class__.objects.filter(document=self.document, seq=self.seq + 1).first()
 
-    def get_stand_by_sign(self):
+    def get_stand_by_sign(self) -> 'Sign':
         return self.__class__.objects.filter(document=self.document, result='0').first()
 
     @staticmethod

@@ -122,21 +122,64 @@ def allUsers(request: Request):
 
 @api_view(['GET'])
 def written_document(request: Request, username: str):
-    documents = Document.objects.filter(author__username=username)
+    start_date: list = request.query_params.get('startDate').split('-')
+    end_date: list = request.query_params.get('endDate').split('-')
+    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    search: str = request.query_params.get('search')
+
+    documents: QuerySet = Document.objects.filter(
+        Q(author__username=username),
+        Q(created__range=(datetime.combine(start_date, time.min),
+                          datetime.combine(end_date, time.max))))
+
+    if search:
+        documents = documents.filter(title__contains=search)
+
+    # documents = Document.objects.filter(author__username=username)
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def approved_document(request: Request, username: str):
-    documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=2))
+    start_date: list = request.query_params.get('startDate').split('-')
+    end_date: list = request.query_params.get('endDate').split('-')
+    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    search: str = request.query_params.get('search')
+
+    documents: QuerySet = Document.objects.filter(
+        Q(signs__result=2),
+        Q(signs__user__username=username),
+        Q(created__range=(datetime.combine(start_date, time.min),
+                          datetime.combine(end_date, time.max))))
+
+    if search:
+        documents = documents.filter(title__contains=search)
+
+    # documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=2))
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def rejected_document(request: Request, username: str):
-    documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=3))
+    start_date: list = request.query_params.get('startDate').split('-')
+    end_date: list = request.query_params.get('endDate').split('-')
+    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    search: str = request.query_params.get('search')
+
+    documents: QuerySet = Document.objects.filter(
+        Q(signs__result=3),
+        Q(signs__user__username=username),
+        Q(created__range=(datetime.combine(start_date, time.min),
+                          datetime.combine(end_date, time.max))))
+
+    if search:
+        documents = documents.filter(title__contains=search)
+
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 

@@ -26,6 +26,7 @@ SECRET_KEY = '!+!@7c0#&ng4pa)&y^+m%$m1z_((t*ua1^#skaj0rl1mna7xpg'
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost',
+                 '155.1.39.223',
                  'eeflow-env.eba-7m9adnkv.ap-northeast-2.elasticbeanstalk.com',
                  'searchrank.shop']
 
