@@ -22,12 +22,12 @@ class ErpTest(InitData, TestCase):
         self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
     def test_voucher_view(self):
-        response: Response = self.drf_client.get('/erp/voucher_list/')
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/erp/voucher_list/', data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.content, bytes)
 
     def test_voucher_batch_number_view(self):
-        response: Response = self.drf_client.get(f'/erp/voucher_list/{4181}')
+        response: Response = self.drf_client.get(f'/erp/voucher_list/{6324}')
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.content, bytes)
-

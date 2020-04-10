@@ -290,15 +290,18 @@ class EaTest(InitData, TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_written_document_view(self):
-        response: Response = self.drf_client.get('/ea/written_document/' + self.user.username)
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/ea/written_document/' + self.user.username, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_approved_document_view(self):
-        response: Response = self.drf_client.get('/ea/approved_document/' + self.user.username)
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/ea/approved_document/' + self.user.username, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_rejected_document_view(self):
-        response: Response = self.drf_client.get('/ea/rejected_document/' + self.user.username)
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/ea/rejected_document/' + self.user.username, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_sign_document_view(self):
@@ -313,8 +316,10 @@ class EaTest(InitData, TestCase):
             "opinion": '열심히 하세요',
             "sign_type": '승인'
         }
-        #
-        # response: Response = self.drf_client.post('/ea/create_document/', data=data)
-
         response: Response = self.drf_client.post('/ea/do_sign/', data=data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_approve_all_view(self):
+        data = {"document_ids": [1]}
+        response: Response = self.drf_client.post('/ea/do_sign_all/', data=data)
         self.assertEqual(response.status_code, 200)

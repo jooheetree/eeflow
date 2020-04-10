@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 
 from ea.views import send_push, create_document, get_defaultUsers, get_departmentUsers, allUsers, written_document, \
-    create_push, delete_push, sign_document, do_sign, approved_document, rejected_document
+    create_push, delete_push, sign_document, do_sign, approved_document, rejected_document, do_sign_all
 
 API_TITLE = 'Blog API'
 API_DESCRIPTION = 'A Web API for create and edit blog'
@@ -38,6 +38,7 @@ urlpatterns = [
     path('sign_document/<str:username>', sign_document, name='sign_document'),
 
     path('do_sign/', do_sign, name='do_sign'),
+    path('do_sign_all/', do_sign_all, name='do_sign_all'),
 
     path('get_defaultUsers/<str:username>', get_defaultUsers, name='get_defaultUsers'),
     path('get_departmentUsers/<str:department_name>', get_departmentUsers, name='get_departmentUsers/'),

@@ -1,14 +1,16 @@
+from datetime import date, datetime, time
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 
 from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList, Invoice
 from employee.models import Employee
 import json
 
-from typing import List
+from typing import List, Union
 
 from erp.services import OracleService
 
@@ -20,6 +22,29 @@ def update_batch_number(batch_number: int):
     ERP Update Query 실행 : 일괄 적용
     """
     pass
+
+
+def create_date(date_str: str) -> date:
+    date_list: list = date_str.split('-')
+    return date(int(date_list[0]), int(date_list[1]), int(date_list[2]))
+
+
+def filter_document(documents: QuerySet, search: str, batch_number: str,
+                    user: str, department: str) -> QuerySet:
+
+    if search:
+        documents = documents.filter(title__contains=search)
+
+    if batch_number:
+        documents = documents.filter(batch_number=batch_number)
+
+    if user:
+        documents = documents.filter(author__first_name__contains=user)
+
+    if department:
+        documents = documents.filter(author__employee__department__name__contains=department)
+
+    return documents
 
 
 @transaction.atomic
@@ -56,7 +81,7 @@ class DocumentServices:
             approvers 순서대로 왔다고 가정
             """
             user: User = User.objects.get(username=approver.get('id'))
-            self.create_sign(user, i, document)
+            self.create_sign(user, i, document, approver.get('type'))
             self.create_defaulsignlist(author, user.employee, approver.get('type'), i)
 
         self.send_push(document)
@@ -105,12 +130,13 @@ class DocumentServices:
         invoice.save()
         return invoice
 
-    def create_sign(self, user: User, seq: int, document: Document) -> None:
+    def create_sign(self, user: User, seq: int, document: Document, approve_type: str) -> None:
         result = Sign.get_result_type_by_seq(seq)
         Sign.objects.create(
             user=user,
             document=document,
             seq=seq,
+            type=approve_type,
             result=result
         )
 

@@ -150,6 +150,9 @@ class Invoice(TimeStampedModel):
     RPAN8 = models.CharField(max_length=20, null=True, blank=True)
     RPGLC = models.CharField(max_length=10, null=True, blank=True)
     RPTORG = models.CharField(max_length=255, null=True, blank=True)
+    RPEXR1NM = models.CharField(max_length=255, null=True, blank=True)
+    RPDDJ = models.CharField(max_length=10, null=True, blank=True)
+    RPCODE = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'{self.RPDGJ}({self.RPRMK})'
@@ -192,6 +195,9 @@ class Invoice(TimeStampedModel):
         {'RPAN8': 'RPAN8'},
         {'RPGLC': 'RPGLC'},
         {'RPTORG': 'RPTORG'},
+        {'RPEXR1NM': 'RPEXR1NM'},
+        {'RPDDJ': 'RPDDJ'},
+        {'RPCODE': 'RPCODE'},
     ]
 
     @staticmethod
@@ -199,8 +205,10 @@ class Invoice(TimeStampedModel):
         columns = Invoice.QUERY_COLUMS
         table = 'vap_voucher'
         wheres = wheres
-        service = OracleService(columns, table, wheres)
-        return service.result
+        service = OracleService()
+        query = service.create_select_query(columns, table, wheres)
+        result = service.get_result(query, columns)
+        return result
 
 
 class Attachment(TimeStampedModel):

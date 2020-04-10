@@ -1,6 +1,7 @@
 import json
 from datetime import date, datetime, time
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.db.models import Q, QuerySet
 from django.http import HttpResponse, HttpRequest
 from typing import List
@@ -12,9 +13,10 @@ from rest_framework.request import Request
 
 from ea.models import Push, Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
 from ea.serializers import DefaultUsersSerializer, SignUsersSerializer, DocumentSerializer, PushSerializer
-from ea.services import DocumentServices, Approvers
+from ea.services import DocumentServices, Approvers, create_date, filter_document
 
 from employee.models import Department, Employee
+from erp.services import OracleService
 
 
 def send_push(request: HttpRequest):
@@ -77,14 +79,9 @@ def create_document(request: Request):
     attachments_files: list = request.data.getlist('files')
     attachments_counts: list = request.data.getlist('counts')
     attachments_invoices: list = request.data.getlist('invoices')
-    # attachments: list = []
 
-    # for i in range(len(attachments_invoices)):
-    #     if attachments_files:
-    #         attachments.append(attachments_files[0:int(attachments_counts[i])])
-    #         del attachments_files[0:int(attachments_counts[i])]
-
-    # del attachments_files, attachments_counts
+    if Document.objects.filter(batch_number=batch_number).first():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     DocumentServices(attachments=attachments_files,
                      attachments_invoices=attachments_invoices,
@@ -93,6 +90,10 @@ def create_document(request: Request):
                      batch_number=batch_number,
                      approvers=approvers,
                      author=author)
+
+    service = OracleService()
+    service.execute_insert_query('kcfeed.eabatno',
+                                 ['BATNO', 'BATDT'], [batch_number, datetime.now().strftime("%Y%m%d")])
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -122,63 +123,61 @@ def allUsers(request: Request):
 
 @api_view(['GET'])
 def written_document(request: Request, username: str):
-    start_date: list = request.query_params.get('startDate').split('-')
-    end_date: list = request.query_params.get('endDate').split('-')
-    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
-    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    start_date: date = create_date(request.query_params.get('startDate'))
+    end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
+    batch_number: str = request.query_params.get('batchNumber', '')
+    user: str = request.query_params.get('user', '')
+    department: str = request.query_params.get('department', '')
 
     documents: QuerySet = Document.objects.filter(
         Q(author__username=username),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
-    if search:
-        documents = documents.filter(title__contains=search)
+    documents = filter_document(documents, search, batch_number, user, department)
 
-    # documents = Document.objects.filter(author__username=username)
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def approved_document(request: Request, username: str):
-    start_date: list = request.query_params.get('startDate').split('-')
-    end_date: list = request.query_params.get('endDate').split('-')
-    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
-    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    start_date: date = create_date(request.query_params.get('startDate'))
+    end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
+    batch_number: str = request.query_params.get('batchNumber', '')
+    user: str = request.query_params.get('user', '')
+    department: str = request.query_params.get('department', '')
 
     documents: QuerySet = Document.objects.filter(
-        Q(signs__result=2),
+        Q(signs__result__in=[2,3]),
         Q(signs__user__username=username),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
-    if search:
-        documents = documents.filter(title__contains=search)
+    documents = filter_document(documents, search, batch_number, user, department)
 
-    # documents = Document.objects.filter(Q(signs__user__username=username), Q(signs__result=2))
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 def rejected_document(request: Request, username: str):
-    start_date: list = request.query_params.get('startDate').split('-')
-    end_date: list = request.query_params.get('endDate').split('-')
-    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
-    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    start_date: date = create_date(request.query_params.get('startDate'))
+    end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
+    batch_number: str = request.query_params.get('batchNumber', '')
+    user: str = request.query_params.get('user', '')
+    department: str = request.query_params.get('department', '')
 
     documents: QuerySet = Document.objects.filter(
         Q(signs__result=3),
-        Q(signs__user__username=username),
+        Q(author__username=username),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
-    if search:
-        documents = documents.filter(title__contains=search)
+    documents = filter_document(documents, search, batch_number, user, department)
 
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -186,11 +185,14 @@ def rejected_document(request: Request, username: str):
 
 @api_view(['GET'])
 def sign_document(request: Request, username: str):
-    start_date: list = request.query_params.get('startDate').split('-')
-    end_date: list = request.query_params.get('endDate').split('-')
-    start_date: date = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
-    end_date: date = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
-    search: str = request.query_params.get('search')
+    start_date: date = create_date(request.query_params.get('startDate'))
+    end_date: date = create_date(request.query_params.get('endDate'))
+
+    search: str = request.query_params.get('search', '')
+    batch_number: str = request.query_params.get('batchNumber', '')
+    user: str = request.query_params.get('user', '')
+    department: str = request.query_params.get('department', '')
+
     documents: QuerySet = Document.objects.filter(
         Q(signs__result=0),
         Q(signs__user__username=username),
@@ -212,9 +214,20 @@ def do_sign(request: Request):
     sign_type: str = request.data.get('sign_type')
 
     document: Document = Document.objects.get(id=document_id)
-    sign = document.signs.get(user__username=username)
+    sign: Sign = document.signs.get(user__username=username)
     sign.approve_sign(opinion) if sign_type == '승인' else sign.deny_sign(opinion)
 
-    # documents = Document.objects.filter(Q(signs__result=0), Q(signs__user__username=username))
-    # serializer = DocumentSerializer(documents, many=True)
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@transaction.atomic
+def do_sign_all(request: Request):
+    document_ids: list = request.data.get('document_ids')
+
+    for document_id in document_ids:
+        document: Document = Document.objects.get(id=document_id)
+        sign: Sign = document.signs.first().get_stand_by_sign()
+        sign.approve_sign('')
+
     return Response(status=status.HTTP_200_OK)

@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from erp.views import voucher_list, voucher_list_batch_number
+# from erp.views import voucher_list, voucher_list_batch_number
+from erp.views import voucher_list
 
 urlpatterns = [
     path('voucher_list/', voucher_list, name='voucher_list'),
-    path('voucher_list/<int:batch_number>', voucher_list_batch_number, name='voucher_list'),
 ]
