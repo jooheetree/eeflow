@@ -99,7 +99,10 @@ if 'SQL_ENGINE' in os.environ:
             "PASSWORD": os.environ.get("SQL_PASSWORD", "kcfeed12!"),
             "HOST": os.environ.get("SQL_HOST", "eeflow.c3jvpuxwaake.ap-northeast-2.rds.amazonaws.com"),
             "PORT": os.environ.get("SQL_PORT", "3306"),
-        }
+        },
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        },
     }
 else:
     DATABASES = {
