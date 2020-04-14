@@ -27,8 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost',
                  '155.1.39.223',
-                 'eeflow-env.eba-7m9adnkv.ap-northeast-2.elasticbeanstalk.com',
-                 'searchrank.shop']
+                 'ec2-54-180-149-44.ap-northeast-2.compute.amazonaws.com/',
+                 ]
 
 
 # Application definition

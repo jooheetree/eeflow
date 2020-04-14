@@ -289,6 +289,10 @@ class Sign(TimeStampedModel):
         if comment:
             self.comment = comment
         self.save()
+
+        service = OracleService()
+        service.execute_delete_query('kcfeed.eabatno', self.document.batch_number)
+
         self.document.finish_deny(f'[반려] {self.document.title}')
 
     def __str__(self):

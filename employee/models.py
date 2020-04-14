@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from enum import Enum
 
 POSITION_ORDER = [
+    {'name': '조장', 'order': 5},
     {'name': '사원', 'order': 10},
     {'name': '주임', 'order': 20},
     {'name': '대리', 'order': 30},
@@ -17,11 +18,11 @@ POSITION_ORDER = [
     {'name': '부사장', 'order': 100},
     {'name': '사장', 'order': 110},
     {'name': '회장', 'order': 120},
-    {'name': '조장', 'order': 130},
 ]
 
 DEPARTMENT_ORDER = [
-    {'name': '[사료]경영지원팀', 'order': 310},
+    {'name': '[사료]총무팀', 'order': 310},
+    {'name': '[사료]재무팀', 'order': 315},
     {'name': '[사료]전산팀', 'order': 320},
     {'name': '[사료]구매팀', 'order': 330},
     {'name': '[사료]생산팀', 'order': 340},

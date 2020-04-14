@@ -70,3 +70,9 @@ class OracleService:
         value_query = value_query[0:-1] + ')'
         self.cursor.execute(query + column_query + value_query)
         self.con.commit()
+
+    def execute_delete_query(self, table: str, wheres: int) -> None:
+        query: str = f" DELETE FROM {table} "
+        where_query: str = f" WHERE BATNO = {wheres} "
+        self.cursor.execute(query + where_query)
+        self.con.commit()
