@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '!+!@7c0#&ng4pa)&y^+m%$m1z_((t*ua1^#skaj0rl1mna7xpg'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -91,17 +89,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eeflow.wsgi.application'
 
-
 # Database
-if 'RDS_HOSTNAME' in os.environ:
+if 'SQL_ENGINE' in os.environ:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.mysql"),
+            "NAME": os.environ.get("SQL_DATABASE", 'eeflow'),
+            "USER": os.environ.get("SQL_USER", "root"),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", "kcfeed12!"),
+            "HOST": os.environ.get("SQL_HOST", "eeflow.c3jvpuxwaake.ap-northeast-2.rds.amazonaws.com"),
+            "PORT": os.environ.get("SQL_PORT", "3306"),
         }
     }
 else:
@@ -111,19 +108,6 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-
-# if 'RDS_HOSTNAME' in os.environ:
-#     print(os.environ['RDS_DB_NAME'])
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.mysql',
-#             'NAME': os.environ['RDS_DB_NAME'],
-#             'USER': os.environ['RDS_USERNAME'],
-#             'PASSWORD': os.environ['RDS_PASSWORD'],
-#             'HOST': os.environ['RDS_HOSTNAME'],
-#             'PORT': os.environ['RDS_PORT'],
-#         }
-#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -143,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -156,7 +139,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
