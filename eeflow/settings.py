@@ -93,12 +93,12 @@ WSGI_APPLICATION = 'eeflow.wsgi.application'
 if 'SQL_ENGINE' in os.environ:
     DATABASES = {
         'default': {
-            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.mysql"),
-            "NAME": os.environ.get("SQL_DATABASE", 'eeflow'),
-            "USER": os.environ.get("SQL_USER", "root"),
-            "PASSWORD": os.environ.get("SQL_PASSWORD", "kcfeed12!"),
-            "HOST": os.environ.get("SQL_HOST", "eeflow.c3jvpuxwaake.ap-northeast-2.rds.amazonaws.com"),
-            "PORT": os.environ.get("SQL_PORT", "3306"),
+            "ENGINE": os.environ.get("SQL_ENGINE", ""),
+            "NAME": os.environ.get("SQL_DATABASE", ''),
+            "USER": os.environ.get("SQL_USER", ""),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
+            "HOST": os.environ.get("SQL_HOST", ""),
+            "PORT": os.environ.get("SQL_PORT", ""),
         },
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
