@@ -54,7 +54,7 @@ class OracleService:
         return select_query[0:-1] + from_query + where_query + 'order by RPICU desc , RPSEQ , RPSFX'
 
     def execute_insert_query(self, table: str, columns: list, values: list) -> None:
-        assert len(columns) == len(values)
+        assert len(columns) == len(values), 'insert 시 column과 values의 값은 같아야함'
         query: str = f" INSERT INTO {table} "
         column_query: str = '('
         value_query: str = ' VALUES ('

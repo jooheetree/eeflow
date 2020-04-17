@@ -58,3 +58,8 @@ class EmployeeModelTest(TestCase):
         self.assertEqual(response.data.get('user').get('first_name'), '이승우')
         self.assertEqual(response.data.get('department').get('name'), '[사료]경영지원팀')
         self.assertEqual(response.data.get('position').get('name'), '사원')
+
+    def test_change_password_view(self):
+        data = {"new_password": '1234'}
+        response: Response = self.drf_client.post('/employee/change_password/', data=data)
+        self.assertEqual(response.status_code, 200)

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -20,3 +21,11 @@ def get_employee(request: Request):
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def change_password(request: Request):
+    new_password = request.data.get('new_password')
+    if not new_password:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    request.user.set_password(new_password)
+    request.user.save()
+    return Response(status=status.HTTP_200_OK)
