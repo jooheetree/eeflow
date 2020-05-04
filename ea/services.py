@@ -29,6 +29,12 @@ def create_date(date_str: str) -> date:
     return date(int(date_list[0]), int(date_list[1]), int(date_list[2]))
 
 
+def create_date_str(date_list: str) -> str:
+    start_date: list = date_list.split('-')
+    start_date: str = start_date[0] + start_date[1] + start_date[2]
+    return start_date
+
+
 def filter_document(documents: QuerySet, search: str, batch_number: str,
                     user: str, department: str) -> QuerySet:
 
@@ -55,23 +61,23 @@ class DocumentServices:
         attachments_counts: list = kwargs.get('attachments_counts')
         title: str = kwargs.get('title')
         batch_number: int = kwargs.get('batch_number')
+        document_type: str = kwargs.get('document_type')
         approvers: Approvers = kwargs.get('approvers')
         author: User = kwargs.get('author')
 
-        document = self.create_document(title, author, approvers, batch_number)
+        document: Document = self.create_document(title, author, approvers, batch_number, document_type)
+
+        self.create_invoices(document)
 
         for invoice_id in attachments_invoices:
             """
-            invoice and invoice's attachments create
+            invoice's attachments create
             """
-            invoice = self.create_invoice(invoice_id, document)
-
             attachment_count = int(attachments_counts[0])
             if attachment_count > 0:
                 invoice_attachments = attachments[0:attachment_count]
                 del attachments[0:attachment_count]
-                self.create_attachments(invoice_attachments, invoice, document)
-
+                self.create_attachments(invoice_attachments, Invoice.objects.get(IDS=invoice_id), document)
             attachments_counts.pop(0)
 
         DefaulSignList.objects.filter(user=author).delete()
@@ -84,18 +90,30 @@ class DocumentServices:
             self.create_sign(user, i, document, approver.get('type'))
             self.create_defaulsignlist(author, user.employee, approver.get('type'), i)
 
-        self.send_push(document)
+        # TODO PUSH self.send_push(document)
 
-    def create_document(self, title: str, auhor: User, approvers: Approvers, batch_number: int) -> Document:
+    def create_document(self, title: str, auhor: User, approvers: Approvers,
+                        batch_number: int, document_type: str) -> Document:
         sign_list: str = ''
         for approver in approvers:
             sign_list += f'{approver.get("name")} ->'
+
+        doc_type: str = '0'
+        if document_type == '채무정리':
+            doc_type = '1'
+        elif document_type == '채권발생':
+            doc_type = '2'
+        elif document_type == '채권정리':
+            doc_type = '3'
+        elif document_type == '일반전표':
+            doc_type = '4'
 
         return Document.objects.create(
             author=auhor,
             title=title,
             sign_list=sign_list,
-            batch_number=batch_number
+            batch_number=batch_number,
+            document_type=doc_type
         )
 
     def create_attachments(self, attachments: list, invoice: Invoice, document: Document) -> None:
@@ -121,14 +139,40 @@ class DocumentServices:
                 isPdf=is_pdf
             )
 
-    def create_invoice(self, invoice_id: str, document: Document):
-        invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
+    def create_invoices(self, document: Document) -> None:
+        if document.document_type == '1':
+            invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "], 'vap_payment1')
+        elif document.document_type == '2':
+            invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "], 'var_invoice1')
+        elif document.document_type == '3':
+            invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "], 'var_receipt1')
+        elif document.document_type == '4':
+            invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "], 'vga_nacct1')
+        else:
+            invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "])
+
         document_temp: dict = {'document': document}
-        invoice_data = {**invoices[0], **document_temp}
-        invoice: Invoice = Invoice.objects.create(**invoice_data)
-        invoice.RPAMT = invoice.RPAMT / 100
-        invoice.save()
-        return invoice
+        for invoice in invoices:
+            invoice_data = {**invoice, **document_temp}
+            Invoice.objects.create(**invoice_data).save()
+
+
+    # def create_invoice(self, invoice_id: str, document: Document):
+    #     # invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
+    #     invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "])
+    #     document_temp: dict = {'document': document}
+    #     invoice_data = {**invoices[0], **document_temp}
+    #     invoice: Invoice = Invoice.objects.create(**invoice_data)
+    #     if invoice.IDS[0] == 'P':
+    #         invoice.document_type = '1'
+    #     elif invoice.IDS[0] == 'I':
+    #         invoice.document_type = '2'
+    #     elif invoice.IDS[0] == 'R':
+    #         invoice.document_type = '3'
+    #     elif invoice.IDS[0] == 'G':
+    #         invoice.document_type = '4'
+    #     invoice.save()
+    #     return invoice
 
     def create_sign(self, user: User, seq: int, document: Document, approve_type: str) -> None:
         result = Sign.get_result_type_by_seq(seq)

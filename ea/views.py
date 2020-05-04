@@ -1,5 +1,6 @@
 import json
 from datetime import date, datetime, time
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.db.models import Q, QuerySet
@@ -74,13 +75,14 @@ def create_document(request: Request):
     author: User = User.objects.get(username=author)
     title: str = request.data.get('title')
     batch_number: int = request.data.get('batch_number')
+    document_type: str = request.data.get('document_type')
     approvers: str = request.data.get('approvers')
     approvers: Approvers = json.loads(approvers)
     attachments_files: list = request.data.getlist('files')
     attachments_counts: list = request.data.getlist('counts')
     attachments_invoices: list = request.data.getlist('invoices')
 
-    if Document.objects.filter(batch_number=batch_number).first():
+    if Document.objects.filter(Q(batch_number=batch_number), ~Q(doc_status=2)).first():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     DocumentServices(attachments=attachments_files,
@@ -88,6 +90,7 @@ def create_document(request: Request):
                      attachments_counts=attachments_counts,
                      title=title,
                      batch_number=batch_number,
+                     document_type=document_type,
                      approvers=approvers,
                      author=author)
 

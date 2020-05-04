@@ -62,13 +62,14 @@ class DocumentSerializer(serializers.ModelSerializer):
     department = serializers.CharField(source='author.employee.department.name')
     created = serializers.DateTimeField(format='%Y-%m-%d')
     doc_status = serializers.CharField(source='get_doc_status_display')
+    document_type = serializers.CharField(source='get_document_type_display')
     attachments = AttachmentSerializer(read_only=True, many=True)
     invoices = InvoiceSerializer(read_only=True, many=True)
     signs = SignSerializer(read_only=True, many=True)
 
     class Meta:
         model = Document
-        fields = ['id', 'title', 'author', 'department', 'doc_status', 'created', 'batch_number',
+        fields = ['id', 'title', 'author', 'department', 'doc_status', 'created', 'batch_number', 'document_type',
                   'attachments', 'invoices', 'signs']
 
 

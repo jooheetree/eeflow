@@ -35,6 +35,14 @@ SIGN_TYPE = (
     ('2', '수신및참조'),
 )
 
+DOCUMENT_TYPE = (
+    ('0', '채무발생'),
+    ('1', '채무정리'),
+    ('2', '채권발생'),
+    ('3', '채권정리'),
+    ('4', '일반전표'),
+)
+
 
 class TimeStampedModel(models.Model):
     """
@@ -78,6 +86,11 @@ class Push(models.Model):
 
 class Document(TimeStampedModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document')
+    document_type = models.CharField(
+        max_length=2,
+        choices=DOCUMENT_TYPE,
+        default='0',
+    )
     title = models.CharField(max_length=255)
     delete_state = models.CharField(
         max_length=2,
@@ -113,97 +126,155 @@ class Document(TimeStampedModel):
 class Invoice(TimeStampedModel):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='invoices')
     IDS = models.CharField(max_length=100)
-    RPSEQ = models.IntegerField()
-    RPJELN = models.CharField(max_length=10)
-    RPDOC = models.CharField(max_length=50)
-    RPICU = models.CharField(max_length=30)
-    RPICUT = models.CharField(max_length=10)
-    RPDCT = models.CharField(max_length=10)
-    RPCRCD = models.CharField(max_length=10)
-    RPTAX = models.CharField(max_length=50, null=True, blank=True)
-    RPALPH = models.CharField(max_length=255, null=True, blank=True)
-    RPDGJ = models.CharField(max_length=10)
-    RPDSVJ = models.CharField(max_length=10)
-    RPEXR1 = models.CharField(max_length=10, null=True, blank=True)
-    RPTXA1 = models.CharField(max_length=10, null=True, blank=True)
-    RPPO = models.CharField(max_length=50, null=True, blank=True)
-    RPCRR = models.CharField(max_length=50, null=True, blank=True)
-    RPMCU = models.CharField(max_length=20)
-    RPOBJ = models.CharField(max_length=20)
-    RPSUB = models.CharField(max_length=20)
-    RPASID = models.CharField(max_length=255, null=True, blank=True)
-    RPDC = models.CharField(max_length=50, null=True, blank=True)
-    RPZ5DEBITAT = models.IntegerField()
-    RPZ5CREDITAT = models.IntegerField()
-    RPAMT = models.IntegerField()
-    RPZ5FDEDIT = models.IntegerField()
-    RPZ5FCREDIT = models.IntegerField()
-    RPDL02 = models.CharField(max_length=255)
-    RPSFX = models.CharField(max_length=10)
-    RPRMK = models.CharField(max_length=500, null=True, blank=True)
-    RPPDCT = models.CharField(max_length=20, null=True, blank=True)
-    RPSBLT = models.CharField(max_length=255, null=True, blank=True)
-    RPADDN = models.CharField(max_length=255, null=True, blank=True)
-    RPPYE = models.CharField(max_length=20)
-    RPDL03 = models.CharField(max_length=255)
-    RPOST = models.CharField(max_length=255, null=True, blank=True)
-    RPAN8 = models.CharField(max_length=20, null=True, blank=True)
-    RPGLC = models.CharField(max_length=10, null=True, blank=True)
-    RPTORG = models.CharField(max_length=255, null=True, blank=True)
-    RPEXR1NM = models.CharField(max_length=255, null=True, blank=True)
+    RPCO = models.CharField(max_length=100, null=True, blank=True)
+    RPICU = models.CharField(max_length=30, null=True, blank=True)
+    RPDOC = models.CharField(max_length=50, null=True, blank=True)
+    RPICUT = models.CharField(max_length=10, null=True, blank=True)
+    RPDCT = models.CharField(max_length=10, null=True, blank=True)
+    RPDICJ = models.CharField(max_length=10, null=True, blank=True)
+    RPDGJ = models.CharField(max_length=10, null=True, blank=True)
+    RPSEQ = models.IntegerField(null=True, blank=True)
+    RPAN8 = models.IntegerField(null=True, blank=True)
+    RPALPH = models.CharField(max_length=80, null=True, blank=True)
+    RPTAX = models.CharField(max_length=200, null=True, blank=True)
+    RPPOST = models.CharField(max_length=2, null=True, blank=True)
+    RPMCU = models.CharField(max_length=24, null=True, blank=True)
+    RPOBJ = models.CharField(max_length=12, null=True, blank=True)
+    RPSUB = models.CharField(max_length=20, null=True, blank=True)
+    RPCODE = models.CharField(max_length=56, null=True, blank=True)
+    RPDL02 = models.CharField(max_length=4000, null=True, blank=True)
+    RPZ5DEBITAT = models.IntegerField(null=True, blank=True)
+    RPZ5CREDITAT = models.IntegerField(null=True, blank=True)
+    RPDC = models.CharField(max_length=4000, null=True, blank=True)
+    RPRMK = models.CharField(max_length=60, null=True, blank=True)
+    RPTORG = models.CharField(max_length=20, null=True, blank=True)
+    RPNAME = models.CharField(max_length=4000, null=True, blank=True)
+    RPDSVJ = models.CharField(max_length=10, null=True, blank=True)
+    RPEXR1 = models.CharField(max_length=4, null=True, blank=True)
+    RPTXA1 = models.CharField(max_length=20, null=True, blank=True)
+    RPEXR1NM = models.CharField(max_length=4000, null=True, blank=True)
+    RPPO = models.CharField(max_length=16, null=True, blank=True)
+    RPASID = models.CharField(max_length=50, null=True, blank=True)
+    RPPDCT = models.CharField(max_length=4, null=True, blank=True)
+    RPSBLT = models.CharField(max_length=2, null=True, blank=True)
+    RPADDN = models.CharField(max_length=4000, null=True, blank=True)
+    RPDL03 = models.CharField(max_length=4000, null=True, blank=True)
+    RPPYE = models.IntegerField(null=True, blank=True)
+    RPGLC = models.CharField(max_length=2, null=True, blank=True)
     RPDDJ = models.CharField(max_length=10, null=True, blank=True)
-    RPCODE = models.CharField(max_length=100, null=True, blank=True)
+    RPJELN = models.CharField(max_length=10, null=True, blank=True)
+    RPSFX = models.CharField(max_length=6, null=True, blank=True)
+    # other
+    RPDOCM = models.CharField(max_length=100, null=True, blank=True)
+    RPVLDT = models.CharField(max_length=100, null=True, blank=True)
+    RPVINV = models.CharField(max_length=100, null=True, blank=True)
+    RPPST = models.CharField(max_length=100, null=True, blank=True)
+    RPDIVJ = models.CharField(max_length=100, null=True, blank=True)
+    RPDL04 = models.CharField(max_length=100, null=True, blank=True)
+    RPDKJ = models.CharField(max_length=100, null=True, blank=True)
+    RPPYID = models.CharField(max_length=100, null=True, blank=True)
+    RPRC5 = models.CharField(max_length=100, null=True, blank=True)
+    RPTYIN = models.CharField(max_length=100, null=True, blank=True)
+    RPDCTM = models.CharField(max_length=100, null=True, blank=True)
+    RPCKNU = models.CharField(max_length=100, null=True, blank=True)
+    RPDMTJ = models.CharField(max_length=100, null=True, blank=True)
+    RPGLBA = models.CharField(max_length=100, null=True, blank=True)
+    RPICUA = models.CharField(max_length=100, null=True, blank=True)
+    RPAID = models.CharField(max_length=100, null=True, blank=True)
+    RPB76ERN = models.CharField(max_length=100, null=True, blank=True)
+    RPDL05 = models.CharField(max_length=100, null=True, blank=True)
+    RPNFVD = models.CharField(max_length=100, null=True, blank=True)
+    RPPN = models.CharField(max_length=100, null=True, blank=True)
+    RPSBL = models.CharField(max_length=100, null=True, blank=True)
+    RPEXR = models.CharField(max_length=100, null=True, blank=True)
+    RPEXA = models.CharField(max_length=100, null=True, blank=True)
+    RPRE = models.CharField(max_length=100, null=True, blank=True)
+    RPLITM = models.CharField(max_length=4000, null=True, blank=True)
 
     def __str__(self):
         return f'{self.RPDGJ}({self.RPRMK})'
 
     QUERY_COLUMS = [
         {'IDS': 'IDS'},
-        {'RPSEQ': 'RPSEQ'},
-        {'RPJELN': 'RPJELN'},
-        {'RPDOC': 'RPDOC'},
+        {'RPCO': 'RPCO'},
         {'RPICU': 'RPICU'},
+        {'RPDOC': 'RPDOC'},
         {'RPICUT': 'RPICUT'},
         {'RPDCT': 'RPDCT'},
-        {'RPCRCD': 'RPCRCD'},
-        {'RPTAX': 'RPTAX'},
-        {'RPALPH': 'RPALPH'},
+        {'RPDICJ': 'RPDICJ'},
         {'RPDGJ': 'RPDGJ'},
-        {'RPDSVJ': 'RPDSVJ'},
-        {'RPEXR1': 'RPEXR1'},
-        {'RPTXA1': 'RPTXA1'},
-        {'RPPO': 'RPPO'},
-        {'RPCRR': 'RPCRR'},
+        {'RPSEQ': 'RPSEQ'},
+        {'RPAN8': 'RPAN8'},
+        {'RPALPH': 'RPALPH'},
+        {'RPTAX': 'RPTAX'},
+        {'RPPOST': 'RPPOST'},
         {'RPMCU': 'RPMCU'},
         {'RPOBJ': 'RPOBJ'},
         {'RPSUB': 'RPSUB'},
-        {'RPASID': 'RPASID'},
-        {'RPZ5DEBITAT': 'RPZ5DEBITAT'},
-        {'RPZ5CREDITAT': 'RPZ5CREDITAT'},
-        {'RPAMT': 'RPAMT'},
-        {'RPZ5FDEDIT': 'RPZ5FDEDIT'},
-        {'RPZ5FCREDIT': 'RPZ5FCREDIT'},
+        {'RPCODE': 'RPCODE'},
         {'RPDL02': 'RPDL02'},
-        {'RPSFX': 'RPSFX'},
+        {'RPZ5DEBITAT / 100': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
+        {'RPDC': 'RPDC'},
         {'RPRMK': 'RPRMK'},
+        {'RPTORG': 'RPTORG'},
+        {'RPNAME': 'RPNAME'},
+        {'RPDSVJ': 'RPDSVJ'},
+        {'RPEXR1': 'RPEXR1'},
+        {'RPTXA1': 'RPTXA1'},
+        {'RPEXR1NM': 'RPEXR1NM'},
+        {'RPPO': 'RPPO'},
+        {'RPASID': 'RPASID'},
         {'RPPDCT': 'RPPDCT'},
         {'RPSBLT': 'RPSBLT'},
         {'RPADDN': 'RPADDN'},
-        {'RPPYE': 'RPPYE'},
         {'RPDL03': 'RPDL03'},
-        {'RPOST': 'RPOST'},
-        {'RPAN8': 'RPAN8'},
+        {'RPPYE': 'RPPYE'},
         {'RPGLC': 'RPGLC'},
-        {'RPTORG': 'RPTORG'},
-        {'RPEXR1NM': 'RPEXR1NM'},
         {'RPDDJ': 'RPDDJ'},
-        {'RPCODE': 'RPCODE'},
+        {'RPJELN': 'RPJELN'},
+        {'RPSFX': 'RPSFX'},
+        # other
+        {'RPDOCM': 'RPDOCM'},
+        {'RPVLDT': 'RPVLDT'},
+        {'RPVINV': 'RPVINV'},
+        {'RPPST': 'RPPST'},
+        {'RPDIVJ': 'RPDIVJ'},
+        {'RPDL04': 'RPDL04'},
+        {'RPDKJ': 'RPDKJ'},
+        {'RPPYID': 'RPPYID'},
+        {'RPRC5': 'RPRC5'},
+        {'RPTYIN': 'RPTYIN'},
+        {'RPDCTM': 'RPDCTM'},
+        {'RPCKNU': 'RPCKNU'},
+        {'RPDMTJ': 'RPDMTJ'},
+        {'RPGLBA': 'RPGLBA'},
+        {'RPICUA': 'RPICUA'},
+        {'RPAID': 'RPAID'},
+        {'RPB76ERN': 'RPB76ERN'},
+        {'RPDL05': 'RPDL05'},
+        {'RPNFVD': 'RPNFVD'},
+        {'RPPN': 'RPPN'},
+        {'RPSBL': 'RPSBL'},
+        {'RPEXR': 'RPEXR'},
+        {'RPEXA': 'RPEXA'},
+        {'RPRE': 'RPRE'},
+        {'RPLITM': 'RPLITM'},
     ]
 
     @staticmethod
     def query_invoices(wheres: list):
         columns = Invoice.QUERY_COLUMS
-        table = 'vap_voucher'
+        table = 'vap_voucher1'
+        wheres = wheres
+        service = OracleService()
+        query = service.create_select_query(columns, table, wheres)
+        result = service.get_result(query, columns)
+        return result
+
+    @staticmethod
+    def query_batch_invoices(wheres: list, table='vap_voucher1'):
+        columns = Invoice.QUERY_COLUMS
         wheres = wheres
         service = OracleService()
         query = service.create_select_query(columns, table, wheres)

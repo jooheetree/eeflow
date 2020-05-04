@@ -40,8 +40,8 @@ class OracleService:
 
     def create_select_query(self, columns: list, table: str, wheres: list) -> str:
         select_query: str = 'select '
-        from_query: str = f'from {table} '
-        where_query: str = "where 1 = 1 "
+        from_query: str = f' from {table} '
+        where_query: str = " where 1 = 1 "
 
         if wheres:
             for where in wheres:

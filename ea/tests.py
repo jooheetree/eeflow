@@ -129,6 +129,8 @@ class EaTest(InitData, TestCase):
     """
     사용자 결재 상신 시 사용되는 Model(Document, Attachment, Sign) 테스트
     """
+    FIRST_BATCH_NUMBER = 7073
+    SECOND_BATCH_NUMBER = 7074
 
     def setUp(self) -> None:
         self.position_create()
@@ -144,9 +146,8 @@ class EaTest(InitData, TestCase):
 
         self.client.force_login(self.user)
 
-        self.document_create()
-
-        invoices: list = Invoice.query_invoices([f'ROWNUM = 1'])
+        self.document_create(EaTest.FIRST_BATCH_NUMBER)
+        invoices: list = Invoice.query_invoices([f'RPICU = {EaTest.FIRST_BATCH_NUMBER}'])
         document = {'document': Document.objects.first()}
         invoice_data = {**invoices[0], **document}
         Invoice.objects.create(**invoice_data)
@@ -166,15 +167,14 @@ class EaTest(InitData, TestCase):
         self.drf_client = APIClient()
         self.drf_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
-    def document_create(self) -> None:
+    def document_create(self, batch_number) -> None:
         self.title = '업무종결보고서'
         self.sign_list = '이철용->윤주영'
-        self.batch_number = 1111
         return Document.objects.create(
             author=self.user,
             title=self.title,
             sign_list=self.sign_list,
-            batch_number=self.batch_number
+            batch_number=batch_number
         )
 
     def attachment_create(self, title: str, size: int, path: str) -> None:
@@ -263,7 +263,7 @@ class EaTest(InitData, TestCase):
 
         data = {
             "author": "swl21803",
-            "batch_number": 3333,
+            "batch_number": EaTest.SECOND_BATCH_NUMBER,
             "title": "비료사업부 12월 고용보험료/7",
             "counts": counts,
             "files": files,
