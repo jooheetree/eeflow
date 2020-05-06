@@ -138,12 +138,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='RPLITM',
-            field=models.CharField(blank=True, max_length=4000, null=True),
+            field=models.CharField(blank=True, max_length=400, null=True),
         ),
         migrations.AlterField(
             model_name='invoice',
             name='RPADDN',
-            field=models.CharField(blank=True, max_length=4000, null=True),
+            field=models.CharField(blank=True, max_length=400, null=True),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -183,7 +183,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='RPDC',
-            field=models.CharField(blank=True, max_length=4000, null=True),
+            field=models.CharField(blank=True, max_length=400, null=True),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -209,12 +209,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='RPDL02',
-            field=models.CharField(max_length=4000),
+            field=models.CharField(max_length=400),
         ),
         migrations.AlterField(
             model_name='invoice',
             name='RPDL03',
-            field=models.CharField(blank=True, max_length=4000, null=True),
+            field=models.CharField(blank=True, max_length=400, null=True),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -249,7 +249,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='RPEXR1NM',
-            field=models.CharField(blank=True, max_length=4000, null=True),
+            field=models.CharField(blank=True, max_length=400, null=True),
         ),
         migrations.AlterField(
             model_name='invoice',
