@@ -58,7 +58,7 @@ class TimeStampedModel(models.Model):
 
 class Push(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='push_data')
-    endpoint = models.CharField(max_length=500)
+    endpoint = models.TextField()
     p256dh = models.CharField(max_length=255)
     auth = models.CharField(max_length=255)
 
@@ -142,23 +142,23 @@ class Invoice(TimeStampedModel):
     RPOBJ = models.CharField(max_length=12, null=True, blank=True)
     RPSUB = models.CharField(max_length=20, null=True, blank=True)
     RPCODE = models.CharField(max_length=56, null=True, blank=True)
-    RPDL02 = models.CharField(max_length=4000, null=True, blank=True)
+    RPDL02 = models.TextField(null=True, blank=True)
     RPZ5DEBITAT = models.IntegerField(null=True, blank=True)
     RPZ5CREDITAT = models.IntegerField(null=True, blank=True)
-    RPDC = models.CharField(max_length=4000, null=True, blank=True)
+    RPDC = models.TextField(null=True, blank=True)
     RPRMK = models.CharField(max_length=60, null=True, blank=True)
     RPTORG = models.CharField(max_length=20, null=True, blank=True)
-    RPNAME = models.CharField(max_length=4000, null=True, blank=True)
+    RPNAME = models.TextField(null=True, blank=True)
     RPDSVJ = models.CharField(max_length=10, null=True, blank=True)
     RPEXR1 = models.CharField(max_length=4, null=True, blank=True)
     RPTXA1 = models.CharField(max_length=20, null=True, blank=True)
-    RPEXR1NM = models.CharField(max_length=4000, null=True, blank=True)
+    RPEXR1NM = models.TextField(null=True, blank=True)
     RPPO = models.CharField(max_length=16, null=True, blank=True)
     RPASID = models.CharField(max_length=50, null=True, blank=True)
     RPPDCT = models.CharField(max_length=4, null=True, blank=True)
     RPSBLT = models.CharField(max_length=2, null=True, blank=True)
-    RPADDN = models.CharField(max_length=4000, null=True, blank=True)
-    RPDL03 = models.CharField(max_length=4000, null=True, blank=True)
+    RPADDN = models.TextField(null=True, blank=True)
+    RPDL03 = models.TextField(null=True, blank=True)
     RPPYE = models.IntegerField(null=True, blank=True)
     RPGLC = models.CharField(max_length=2, null=True, blank=True)
     RPDDJ = models.CharField(max_length=10, null=True, blank=True)
@@ -189,7 +189,7 @@ class Invoice(TimeStampedModel):
     RPEXR = models.CharField(max_length=100, null=True, blank=True)
     RPEXA = models.CharField(max_length=100, null=True, blank=True)
     RPRE = models.CharField(max_length=100, null=True, blank=True)
-    RPLITM = models.CharField(max_length=4000, null=True, blank=True)
+    RPLITM = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.RPDGJ}({self.RPRMK})'
