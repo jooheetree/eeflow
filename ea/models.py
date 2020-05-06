@@ -213,8 +213,6 @@ class Invoice(TimeStampedModel):
         {'RPSUB': 'RPSUB'},
         {'RPCODE': 'RPCODE'},
         {'RPDL02': 'RPDL02'},
-        {'RPZ5DEBITAT / 100': 'RPZ5DEBITAT'},
-        {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
         {'RPDC': 'RPDC'},
         {'RPRMK': 'RPRMK'},
         {'RPTORG': 'RPTORG'},
@@ -260,6 +258,9 @@ class Invoice(TimeStampedModel):
         {'RPEXA': 'RPEXA'},
         {'RPRE': 'RPRE'},
         {'RPLITM': 'RPLITM'},
+        # 차변, 대변
+        {'RPZ5DEBITAT / 100': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
     ]
 
     @staticmethod
@@ -275,6 +276,12 @@ class Invoice(TimeStampedModel):
     @staticmethod
     def query_batch_invoices(wheres: list, table='vap_voucher1'):
         columns = Invoice.QUERY_COLUMS
+        if table == 'vga_nacct1':
+            columns.pop()
+            columns.pop()
+            columns.append({'RPZ5DEBITAT': 'RPZ5DEBITAT'})
+            columns.append({'RPZ5CREDITAT': 'RPZ5CREDITAT'})
+
         wheres = wheres
         service = OracleService()
         query = service.create_select_query(columns, table, wheres)
@@ -373,6 +380,11 @@ class Sign(TimeStampedModel):
 class DefaulSignList(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='default_sign_list')
     approver = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='+')
+    document_type = models.CharField(
+        max_length=2,
+        choices=DOCUMENT_TYPE,
+        default='0',
+    )
     type = models.CharField(
         max_length=2,
         choices=SIGN_TYPE,

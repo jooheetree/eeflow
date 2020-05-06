@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from ea.models import Push, Document, Attachment, Sign, SIGN_TYPE, DefaulSignList
+from ea.models import Push, Document, Attachment, Sign, SIGN_TYPE, DefaulSignList, DOCUMENT_TYPE
 from ea.serializers import DefaultUsersSerializer, SignUsersSerializer, DocumentSerializer, PushSerializer
 from ea.services import DocumentServices, Approvers, create_date, filter_document
 
@@ -102,9 +102,15 @@ def create_document(request: Request):
 
 
 @api_view(['GET'])
-def get_defaultUsers(request: Request, username: str):
+def get_defaultUsers(request: Request, username: str, document_type: str):
+    doc_type = '0'
+    for t in DOCUMENT_TYPE:
+        if document_type == t[1]:
+            doc_type = t[0]
+            break
+
     user = User.objects.get(username=username)
-    defaulSignList = DefaulSignList.objects.filter(user=user)
+    defaulSignList = DefaulSignList.objects.filter(Q(user=user), Q(document_type=doc_type))
     serializer = DefaultUsersSerializer(defaulSignList, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 

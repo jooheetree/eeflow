@@ -1,12 +1,9 @@
-from datetime import date, datetime, time
-
 from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from ea.models import Invoice
 from ea.services import create_date_str
 from employee.models import Employee
 from erp.services import OracleService
@@ -269,8 +266,8 @@ def nacct_list(request: Request):
         {'RPTAX': 'RPTAX'},
         {'RPALPH': 'RPALPH'},
         {'RPSFX': 'RPSFX'},
-        {'RPZ5DEBITAT / 100': 'RPZ5DEBITAT'},
-        {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
+        {'RPZ5DEBITAT': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT': 'RPZ5CREDITAT'},
         {'RPAN8': 'RPAN8'},
         {'RPTORG': 'RPTORG'},
         {'RPDSVJ': 'RPDSVJ'},

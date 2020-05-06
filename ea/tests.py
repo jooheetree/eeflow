@@ -275,7 +275,7 @@ class EaTest(InitData, TestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_get_defaultUsers_view(self):
-        response: Response = self.drf_client.get('/ea/get_defaultUsers/' + self.user.username)
+        response: Response = self.drf_client.get(f'/ea/get_defaultUsers/{self.user.username}/채무발생')
         self.assertGreaterEqual(len(response.data), 3)
         self.assertEqual(response.status_code, 200)
 

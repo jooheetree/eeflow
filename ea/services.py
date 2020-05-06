@@ -80,7 +80,7 @@ class DocumentServices:
                 self.create_attachments(invoice_attachments, Invoice.objects.get(IDS=invoice_id), document)
             attachments_counts.pop(0)
 
-        DefaulSignList.objects.filter(user=author).delete()
+        DefaulSignList.objects.filter(Q(user=author), Q(document_type=document.document_type)).delete()
 
         for i, approver in enumerate(approvers):
             """
@@ -88,7 +88,7 @@ class DocumentServices:
             """
             user: User = User.objects.get(username=approver.get('id'))
             self.create_sign(user, i, document, approver.get('type'))
-            self.create_defaulsignlist(author, user.employee, approver.get('type'), i)
+            self.create_defaulsignlist(author, user.employee, approver.get('type'), i, document.document_type)
 
         # TODO PUSH self.send_push(document)
 
@@ -184,11 +184,13 @@ class DocumentServices:
             result=result
         )
 
-    def create_defaulsignlist(self, user: User, approver: Employee, type: int, order: int) -> None:
+    def create_defaulsignlist(self, user: User, approver: Employee, type: int,
+                              order: int, document_type: str) -> None:
         return DefaulSignList.objects.create(
             user=user,
             approver=approver,
             type=type,
+            document_type=document_type,
             order=order
         )
 

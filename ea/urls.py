@@ -40,7 +40,7 @@ urlpatterns = [
     path('do_sign/', do_sign, name='do_sign'),
     path('do_sign_all/', do_sign_all, name='do_sign_all'),
 
-    path('get_defaultUsers/<str:username>', get_defaultUsers, name='get_defaultUsers'),
+    path('get_defaultUsers/<str:username>/<str:document_type>', get_defaultUsers, name='get_defaultUsers'),
     path('get_departmentUsers/<str:department_name>', get_departmentUsers, name='get_departmentUsers/'),
     path('get_allUsers/', allUsers, name='get_allUsers'),
 ]
