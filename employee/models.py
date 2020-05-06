@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from enum import Enum
 
 POSITION_ORDER = [
     {'name': '조장', 'order': 5},

@@ -104,6 +104,8 @@ if 'SQL_ENGINE' in os.environ:
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         },
     }
+    ORACLE_IP = os.environ.get("ORACLE_IP", '')
+
 else:
     DATABASES = {
         'default': {
@@ -111,6 +113,7 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+    ORACLE_IP = '155.1.19.32'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

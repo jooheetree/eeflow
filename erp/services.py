@@ -4,6 +4,8 @@ import cx_Oracle
 import os
 from cx_Oracle import Connection, Cursor
 
+from eeflow.settings import ORACLE_IP
+
 
 class OracleService:
     def __init__(self):
@@ -12,7 +14,8 @@ class OracleService:
 
     def init_env(self) -> Connection:
         os.environ["NLS_LANG"] = ".AL32UTF8"
-        dsn_tns = cx_Oracle.makedsn('155.1.19.32', '1521', service_name='KCDB')
+        # dsn_tns = cx_Oracle.makedsn('155.1.19.32', '1521', service_name='KCDB')
+        dsn_tns = cx_Oracle.makedsn(ORACLE_IP, '1521', service_name='KCDB')
         return cx_Oracle.connect(user=r'SYSTEM', password='Kcfeed12#$', dsn=dsn_tns)
 
     def get_result(self, query: str, columns: list) -> list:
