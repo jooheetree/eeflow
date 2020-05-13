@@ -66,11 +66,12 @@ class DocumentSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(read_only=True, many=True)
     invoices = InvoiceSerializer(read_only=True, many=True)
     signs = SignSerializer(read_only=True, many=True)
+    price = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Document
         fields = ['id', 'title', 'author', 'department', 'doc_status', 'created', 'batch_number', 'document_type',
-                  'attachments', 'invoices', 'signs']
+                  'attachments', 'invoices', 'signs', 'price']
 
 
 class PushSerializer(serializers.ModelSerializer):

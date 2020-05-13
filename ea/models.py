@@ -263,6 +263,75 @@ class Invoice(TimeStampedModel):
         {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
     ]
 
+    QUERY_COLUMS_NORMAL = [
+        {'IDS': 'IDS'},
+        {'RPCO': 'RPCO'},
+        {'RPICU': 'RPICU'},
+        {'RPDOC': 'RPDOC'},
+        {'RPICUT': 'RPICUT'},
+        {'RPDCT': 'RPDCT'},
+        {'RPDICJ': 'RPDICJ'},
+        {'RPDGJ': 'RPDGJ'},
+        {'RPSEQ': 'RPSEQ'},
+        {'RPAN8': 'RPAN8'},
+        {'RPALPH': 'RPALPH'},
+        {'RPTAX': 'RPTAX'},
+        {'RPPOST': 'RPPOST'},
+        {'RPMCU': 'RPMCU'},
+        {'RPOBJ': 'RPOBJ'},
+        {'RPSUB': 'RPSUB'},
+        {'RPCODE': 'RPCODE'},
+        {'RPDL02': 'RPDL02'},
+        {'RPDC': 'RPDC'},
+        {'RPRMK': 'RPRMK'},
+        {'RPTORG': 'RPTORG'},
+        {'RPNAME': 'RPNAME'},
+        {'RPDSVJ': 'RPDSVJ'},
+        {'RPEXR1': 'RPEXR1'},
+        {'RPTXA1': 'RPTXA1'},
+        {'RPEXR1NM': 'RPEXR1NM'},
+        {'RPPO': 'RPPO'},
+        {'RPASID': 'RPASID'},
+        {'RPPDCT': 'RPPDCT'},
+        {'RPSBLT': 'RPSBLT'},
+        {'RPADDN': 'RPADDN'},
+        {'RPDL03': 'RPDL03'},
+        {'RPPYE': 'RPPYE'},
+        {'RPGLC': 'RPGLC'},
+        {'RPDDJ': 'RPDDJ'},
+        {'RPJELN': 'RPJELN'},
+        {'RPSFX': 'RPSFX'},
+        # other
+        {'RPDOCM': 'RPDOCM'},
+        {'RPVLDT': 'RPVLDT'},
+        {'RPVINV': 'RPVINV'},
+        {'RPPST': 'RPPST'},
+        {'RPDIVJ': 'RPDIVJ'},
+        {'RPDL04': 'RPDL04'},
+        {'RPDKJ': 'RPDKJ'},
+        {'RPPYID': 'RPPYID'},
+        {'RPRC5': 'RPRC5'},
+        {'RPTYIN': 'RPTYIN'},
+        {'RPDCTM': 'RPDCTM'},
+        {'RPCKNU': 'RPCKNU'},
+        {'RPDMTJ': 'RPDMTJ'},
+        {'RPGLBA': 'RPGLBA'},
+        {'RPICUA': 'RPICUA'},
+        {'RPAID': 'RPAID'},
+        {'RPB76ERN': 'RPB76ERN'},
+        {'RPDL05': 'RPDL05'},
+        {'RPNFVD': 'RPNFVD'},
+        {'RPPN': 'RPPN'},
+        {'RPSBL': 'RPSBL'},
+        {'RPEXR': 'RPEXR'},
+        {'RPEXA': 'RPEXA'},
+        {'RPRE': 'RPRE'},
+        {'RPLITM': 'RPLITM'},
+        # 차변, 대변
+        {'RPZ5DEBITAT': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT': 'RPZ5CREDITAT'},
+    ]
+
     @staticmethod
     def query_invoices(wheres: list):
         columns = Invoice.QUERY_COLUMS
@@ -277,10 +346,7 @@ class Invoice(TimeStampedModel):
     def query_batch_invoices(wheres: list, table='vap_voucher1'):
         columns = Invoice.QUERY_COLUMS
         if table == 'vga_nacct1':
-            columns.pop()
-            columns.pop()
-            columns.append({'RPZ5DEBITAT': 'RPZ5DEBITAT'})
-            columns.append({'RPZ5CREDITAT': 'RPZ5CREDITAT'})
+            columns = Invoice.QUERY_COLUMS_NORMAL
 
         wheres = wheres
         service = OracleService()

@@ -3,7 +3,7 @@ from datetime import date, datetime, time
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.db.models import Q, QuerySet
+from django.db.models import Q, QuerySet, Sum
 from django.http import HttpResponse, HttpRequest
 from typing import List
 
@@ -160,7 +160,7 @@ def approved_document(request: Request, username: str):
     department: str = request.query_params.get('department', '')
 
     documents: QuerySet = Document.objects.filter(
-        Q(signs__result__in=[2,3]),
+        Q(signs__result__in=[2, 3]),
         Q(signs__user__username=username),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
@@ -211,6 +211,7 @@ def sign_document(request: Request, username: str):
     if search:
         documents = documents.filter(title__contains=search)
 
+    documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 

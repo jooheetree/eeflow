@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
-from django.db.models import Q, QuerySet
+from django.db.models import Q, QuerySet, Sum
 
 from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList, Invoice
 from employee.models import Employee
@@ -50,6 +50,7 @@ def filter_document(documents: QuerySet, search: str, batch_number: str,
     if department:
         documents = documents.filter(author__employee__department__name__contains=department)
 
+    documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
     return documents
 
 
