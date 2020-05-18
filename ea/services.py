@@ -91,7 +91,7 @@ class DocumentServices:
             self.create_sign(user, i, document, approver.get('type'))
             self.create_defaulsignlist(author, user.employee, approver.get('type'), i, document.document_type)
 
-        # TODO PUSH self.send_push(document)
+        self.send_push(document)
 
     def create_document(self, title: str, auhor: User, approvers: Approvers,
                         batch_number: int, document_type: str) -> Document:
@@ -156,24 +156,6 @@ class DocumentServices:
         for invoice in invoices:
             invoice_data = {**invoice, **document_temp}
             Invoice.objects.create(**invoice_data).save()
-
-
-    # def create_invoice(self, invoice_id: str, document: Document):
-    #     # invoices: list = Invoice.query_invoices([f"IDS='{invoice_id}'"])
-    #     invoices: list = Invoice.query_batch_invoices([f" RPICU={document.batch_number} "])
-    #     document_temp: dict = {'document': document}
-    #     invoice_data = {**invoices[0], **document_temp}
-    #     invoice: Invoice = Invoice.objects.create(**invoice_data)
-    #     if invoice.IDS[0] == 'P':
-    #         invoice.document_type = '1'
-    #     elif invoice.IDS[0] == 'I':
-    #         invoice.document_type = '2'
-    #     elif invoice.IDS[0] == 'R':
-    #         invoice.document_type = '3'
-    #     elif invoice.IDS[0] == 'G':
-    #         invoice.document_type = '4'
-    #     invoice.save()
-    #     return invoice
 
     def create_sign(self, user: User, seq: int, document: Document, approve_type: str) -> None:
         result = Sign.get_result_type_by_seq(seq)

@@ -3,7 +3,7 @@ from datetime import date, datetime, time
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.db.models import Q, QuerySet, Sum
+from django.db.models import Q, QuerySet, Sum, Count, Case, When
 from django.http import HttpResponse, HttpRequest
 from typing import List
 
@@ -47,25 +47,25 @@ def create_push(request: Request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+def check_push(request: Request):
+    endpoint: str = request.query_params.get('endpoint')
+
+    if Push.objects.filter(Q(endpoint=endpoint), Q(user=request.user)):
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 def delete_push(request: Request):
     endpoint: str = request.data.get('endpoint')
-    push: Push = Push.objects.get(endpoint=endpoint)
-    push.delete()
-    # push_info: dict = request.data.get('pushInfo')
-    # data = {'user': request.user.id,
-    #         'endpoint': push_info.get('endpoint'),
-    #         'p256dh': push_info.get('keys').get('p256dh'),
-    #         'auth': push_info.get('keys').get('auth')}
-    #
-    # if Push.objects.filter(endpoint=push_info.get('endpoint')):
-    #     return Response(status=status.HTTP_200_OK)
-    #
-    # serializer = PushSerializer(data=data)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    push: Push = Push.objects.filter(endpoint=endpoint).first()
 
+    if not push:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    push.delete()
     return Response(status=status.HTTP_200_OK)
 
 
@@ -128,6 +128,15 @@ def allUsers(request: Request):
     employees = Employee.objects.all()
     serializer = SignUsersSerializer(employees, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_todo_count(request: Request):
+    documents_count: int = Document.objects.filter(
+        Q(signs__result=0),
+        Q(signs__user=request.user)).count()
+
+    return Response(data=documents_count, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -212,6 +221,10 @@ def sign_document(request: Request, username: str):
         documents = documents.filter(title__contains=search)
 
     documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
+    documents = documents.annotate(invoices_count=Case(
+        When(document_type='0', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
+        default=Count('invoices', filter=Q(invoices__RPSEQ=1))
+    ))
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from erp.views import voucher_list, nacct_list, payment_list, invoice_list, receipt_list
+from erp.views import voucher_list, nacct_list, payment_list, invoice_list, receipt_list, get_todo_count
 
 urlpatterns = [
     path('voucher_list/', voucher_list, name='voucher_list'),  # 채무발생
@@ -23,4 +23,5 @@ urlpatterns = [
     path('invoice_list/', invoice_list, name='invoice_list'),  # 채권발생
     path('receipt_list/', receipt_list, name='receipt_list'),  # 채권정리
     path('nacct_list/', nacct_list, name='nacct_list'),  # 일반전표
+    path('get_todo_count/', get_todo_count, name='get_todo_count'),  # 카운트
 ]

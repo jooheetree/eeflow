@@ -121,6 +121,9 @@ class PushTest(InitData, TestCase):
         push = Push.objects.filter(user=self.user).first()
         push.send_push('[test_create_push_view]')
 
+        response = self.drf_client.get('/ea/check_push/', data={"endpoint": ENDPOINT})
+        self.assertEqual(response.status_code, 200)
+
         response = self.drf_client.post('/ea/delete_push/', data={"endpoint": ENDPOINT})
         self.assertEqual(response.status_code, 200)
 
@@ -129,8 +132,8 @@ class EaTest(InitData, TestCase):
     """
     사용자 결재 상신 시 사용되는 Model(Document, Attachment, Sign) 테스트
     """
-    FIRST_BATCH_NUMBER = 7073
-    SECOND_BATCH_NUMBER = 7074
+    FIRST_BATCH_NUMBER = 7129
+    SECOND_BATCH_NUMBER = 7227
 
     def setUp(self) -> None:
         self.position_create()
@@ -322,4 +325,8 @@ class EaTest(InitData, TestCase):
     def test_approve_all_view(self):
         data = {"document_ids": [1]}
         response: Response = self.drf_client.post('/ea/do_sign_all/', data=data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_todo_count(self):
+        response: Response = self.drf_client.get('/ea/get_todo_count/')
         self.assertEqual(response.status_code, 200)

@@ -5,8 +5,15 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 
 from ea.services import create_date_str
-from employee.models import Employee
+from employee.models import Employee, Department
 from erp.services import OracleService
+
+
+def create_department_users(department: Department) -> str:
+    employees: QuerySet = Employee.objects.filter(department=department)
+    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
+    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    return user_str
 
 
 @api_view(['GET'])
@@ -14,10 +21,7 @@ def voucher_list(request: Request):
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
-
-    employees: QuerySet = Employee.objects.filter(department=request.user.employee.department)
-    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
-    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    user_str: str = create_department_users(request.user.employee.department)
 
     columns = [
         {'ids': 'id'},
@@ -71,10 +75,7 @@ def payment_list(request: Request):
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
-
-    employees: QuerySet = Employee.objects.filter(department=request.user.employee.department)
-    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
-    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    user_str: str = create_department_users(request.user.employee.department)
 
     columns = [
         {'ids': 'id'},
@@ -129,10 +130,7 @@ def invoice_list(request: Request):
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
-
-    employees: QuerySet = Employee.objects.filter(department=request.user.employee.department)
-    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
-    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    user_str: str = create_department_users(request.user.employee.department)
 
     columns = [
         {'ids': 'id'},
@@ -185,10 +183,7 @@ def receipt_list(request: Request):
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
-
-    employees: QuerySet = Employee.objects.filter(department=request.user.employee.department)
-    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
-    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    user_str: str = create_department_users(request.user.employee.department)
 
     columns = [
         {'ids': 'id'},
@@ -244,10 +239,7 @@ def nacct_list(request: Request):
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
-
-    employees: QuerySet = Employee.objects.filter(department=request.user.employee.department)
-    usernames: list = list(map(lambda employee: employee.user.username.upper(), employees))
-    user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+    user_str: str = create_department_users(request.user.employee.department)
 
     columns = [
         {'ids': 'id'},
@@ -295,3 +287,10 @@ def nacct_list(request: Request):
     return Response(data=result, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def get_todo_count(request: Request):
+    user_str: str = create_department_users(request.user.employee.department)
+
+    service = OracleService()
+    result = service.get_erp_invoices_todo_count(user_str)
+    return Response(data=result, status=status.HTTP_200_OK)

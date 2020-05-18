@@ -51,8 +51,8 @@ class ErpTest(InitData, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.content, bytes)
 
-    # def test_nacct_view(self):
-    #     data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
-    #     response: Response = self.drf_client.get('/erp/nacct_list/', data=data)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIsInstance(response.content, bytes)
+    def test_get_erp_invoices_todo_count(self):
+        data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
+        response: Response = self.drf_client.get('/erp/get_todo_count/', data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.content, bytes)
