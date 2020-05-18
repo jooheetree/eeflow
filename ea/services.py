@@ -78,7 +78,10 @@ class DocumentServices:
             if attachment_count > 0:
                 invoice_attachments = attachments[0:attachment_count]
                 del attachments[0:attachment_count]
-                self.create_attachments(invoice_attachments, Invoice.objects.get(IDS=invoice_id), document)
+                # self.create_attachments(invoice_attachments, Invoice.objects.get(IDS=invoice_id), document)
+                self.create_attachments(invoice_attachments,
+                                        Invoice.objects.filter(Q(IDS=invoice_id), ~Q(document__doc_status=2)).first(),
+                                        document)
             attachments_counts.pop(0)
 
         DefaulSignList.objects.filter(Q(user=author), Q(document_type=document.document_type)).delete()
