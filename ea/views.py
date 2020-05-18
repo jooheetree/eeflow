@@ -71,8 +71,7 @@ def delete_push(request: Request):
 
 @api_view(['POST'])
 def create_document(request: Request):
-    author: str = request.data.get('author')
-    author: User = User.objects.get(username=author)
+    author: User = request.user
     title: str = request.data.get('title')
     batch_number: int = request.data.get('batch_number')
     document_type: str = request.data.get('document_type')
