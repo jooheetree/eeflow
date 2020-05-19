@@ -222,6 +222,8 @@ def sign_document(request: Request, username: str):
     documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
     documents = documents.annotate(invoices_count=Case(
         When(document_type='0', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
+        When(document_type='2', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
+        When(document_type='3', then=Count('invoices__RPCKNU', distinct=True)),
         default=Count('invoices', filter=Q(invoices__RPSEQ=1))
     ))
     serializer = DocumentSerializer(documents, many=True)

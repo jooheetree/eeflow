@@ -214,8 +214,8 @@ def receipt_list(request: Request):
         {'RPCODE': 'RPCODE'},
         {'RPNAME': 'RPNAME'},
         # another
-        {'RPPYID': 'RPPYID'}
-
+        {'RPPYID': 'RPPYID'},
+        {'RPCKNU': 'RPCKNU'}
     ]
     table = 'var_receipt1'
     user_where = f" RPTORG in ({user_str})"
