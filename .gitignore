@@ -11,3 +11,4 @@ venvv/
 # SQLite database files
 
 *.sqlite3
+/.elasticbeanstalk/logs/200320_172537.zip
