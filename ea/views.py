@@ -77,9 +77,9 @@ def create_document(request: Request):
     document_type: str = request.data.get('document_type')
     approvers: str = request.data.get('approvers')
     approvers: Approvers = json.loads(approvers)
-    attachments_files: list = request.data.getlist('files')
-    attachments_counts: list = request.data.getlist('counts')
-    attachments_invoices: list = request.data.getlist('invoices')
+    attachments_files: list = request.FILES.getlist('files')
+    attachments_counts: list = request.POST.getlist('counts')
+    attachments_invoices: list = request.POST.getlist('invoices')
 
     if Document.objects.filter(Q(batch_number=batch_number), ~Q(doc_status=2)).first():
         return Response(status=status.HTTP_400_BAD_REQUEST)
