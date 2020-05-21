@@ -101,23 +101,23 @@ def create_document(request: Request):
 
 
 @api_view(['GET'])
-def get_defaultUsers(request: Request, username: str, document_type: str):
+def get_defaultUsers(request: Request, document_type: str):
     doc_type = '0'
     for t in DOCUMENT_TYPE:
         if document_type == t[1]:
             doc_type = t[0]
             break
 
-    user = User.objects.get(username=username)
-    defaulSignList = DefaulSignList.objects.filter(Q(user=user), Q(document_type=doc_type))
+    defaulSignList = DefaulSignList.objects.filter(Q(user=request.user), Q(document_type=doc_type))
     serializer = DefaultUsersSerializer(defaulSignList, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
-def get_departmentUsers(request: Request, department_name: str):
-    department = Department.objects.get(name=department_name)
-    employees = Employee.objects.filter(department=department)
+def get_departmentUsers(request: Request):
+
+    # department = Department.objects.get(name=department_name)
+    employees = Employee.objects.filter(department=request.user.employee.department)
     serializer = SignUsersSerializer(employees, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -139,7 +139,7 @@ def get_todo_count(request: Request):
 
 
 @api_view(['GET'])
-def written_document(request: Request, username: str):
+def written_document(request: Request):
     start_date: date = create_date(request.query_params.get('startDate'))
     end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
@@ -148,7 +148,7 @@ def written_document(request: Request, username: str):
     department: str = request.query_params.get('department', '')
 
     documents: QuerySet = Document.objects.filter(
-        Q(author__username=username),
+        Q(author=request.user),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
@@ -159,7 +159,7 @@ def written_document(request: Request, username: str):
 
 
 @api_view(['GET'])
-def approved_document(request: Request, username: str):
+def approved_document(request: Request):
     start_date: date = create_date(request.query_params.get('startDate'))
     end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
@@ -169,7 +169,7 @@ def approved_document(request: Request, username: str):
 
     documents: QuerySet = Document.objects.filter(
         Q(signs__result__in=[2, 3]),
-        Q(signs__user__username=username),
+        Q(signs__user=request.user),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
@@ -180,7 +180,7 @@ def approved_document(request: Request, username: str):
 
 
 @api_view(['GET'])
-def rejected_document(request: Request, username: str):
+def rejected_document(request: Request):
     start_date: date = create_date(request.query_params.get('startDate'))
     end_date: date = create_date(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
@@ -190,7 +190,7 @@ def rejected_document(request: Request, username: str):
 
     documents: QuerySet = Document.objects.filter(
         Q(signs__result=3),
-        Q(author__username=username),
+        Q(author__username=request.user),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
@@ -201,7 +201,7 @@ def rejected_document(request: Request, username: str):
 
 
 @api_view(['GET'])
-def sign_document(request: Request, username: str):
+def sign_document(request: Request):
     start_date: date = create_date(request.query_params.get('startDate'))
     end_date: date = create_date(request.query_params.get('endDate'))
 
@@ -212,7 +212,7 @@ def sign_document(request: Request, username: str):
 
     documents: QuerySet = Document.objects.filter(
         Q(signs__result=0),
-        Q(signs__user__username=username),
+        Q(signs__user__username=request.user),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
@@ -228,6 +228,36 @@ def sign_document(request: Request, username: str):
     ))
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+#
+#
+# @api_view(['GET'])
+# def sign_document(request: Request, username: str):
+#     start_date: date = create_date(request.query_params.get('startDate'))
+#     end_date: date = create_date(request.query_params.get('endDate'))
+#
+#     search: str = request.query_params.get('search', '')
+#     batch_number: str = request.query_params.get('batchNumber', '')
+#     user: str = request.query_params.get('user', '')
+#     department: str = request.query_params.get('department', '')
+#
+#     documents: QuerySet = Document.objects.filter(
+#         Q(signs__result=0),
+#         Q(signs__user__username=username),
+#         Q(created__range=(datetime.combine(start_date, time.min),
+#                           datetime.combine(end_date, time.max))))
+#
+#     if search:
+#         documents = documents.filter(title__contains=search)
+#
+#     documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
+#     documents = documents.annotate(invoices_count=Case(
+#         When(document_type='0', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
+#         When(document_type='2', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
+#         When(document_type='3', then=Count('invoices__RPCKNU', distinct=True)),
+#         default=Count('invoices', filter=Q(invoices__RPSEQ=1))
+#     ))
+#     serializer = DocumentSerializer(documents, many=True)
+#     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

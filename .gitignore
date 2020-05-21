@@ -8,7 +8,10 @@ venvv/
 .idea/
 .temp/
 media/
+<<<<<<< HEAD
 
+=======
+>>>>>>> fed5f4716277f2078d295308760d6387f4e05f31
 # SQLite database files
 
 *.sqlite3

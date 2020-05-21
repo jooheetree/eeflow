@@ -33,16 +33,16 @@ urlpatterns = [
     path('delete_push/', delete_push, name='delete_push'),
 
     path('create_document/', create_document, name='create_document'),
-    path('written_document/<str:username>', written_document, name='written_document'),
-    path('approved_document/<str:username>', approved_document, name='approved_document'),
-    path('rejected_document/<str:username>', rejected_document, name='rejected_document'),
-    path('sign_document/<str:username>', sign_document, name='sign_document'),
+    path('written_document/', written_document, name='written_document'),
+    path('approved_document/', approved_document, name='approved_document'),
+    path('rejected_document/', rejected_document, name='rejected_document'),
+    path('sign_document/', sign_document, name='sign_document'),
 
     path('do_sign/', do_sign, name='do_sign'),
     path('do_sign_all/', do_sign_all, name='do_sign_all'),
 
-    path('get_defaultUsers/<str:username>/<str:document_type>', get_defaultUsers, name='get_defaultUsers'),
-    path('get_departmentUsers/<str:department_name>', get_departmentUsers, name='get_departmentUsers/'),
+    path('get_defaultUsers/<str:document_type>', get_defaultUsers, name='get_defaultUsers'),
+    path('get_departmentUsers/', get_departmentUsers, name='get_departmentUsers/'),
     path('get_allUsers/', allUsers, name='get_allUsers'),
 
     path('get_todo_count/', get_todo_count, name='get_todo_count'),

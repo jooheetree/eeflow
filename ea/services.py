@@ -1,5 +1,4 @@
 from datetime import date, datetime, time
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -8,6 +7,8 @@ from django.db.models import Q, QuerySet, Sum
 
 from ea.models import Document, Attachment, Sign, SIGN_TYPE, DefaulSignList, Invoice
 from employee.models import Employee
+from PIL import Image
+import os
 import json
 
 from typing import List, Union
@@ -37,7 +38,6 @@ def create_date_str(date_list: str) -> str:
 
 def filter_document(documents: QuerySet, search: str, batch_number: str,
                     user: str, department: str) -> QuerySet:
-
     if search:
         documents = documents.filter(title__contains=search)
 
@@ -123,11 +123,18 @@ class DocumentServices:
     def create_attachments(self, attachments: list, invoice: Invoice, document: Document) -> None:
         for attachment in attachments:
             fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
-            filename = fs.save(attachment.name, attachment)
+            current_time = datetime.now().strftime('%Y%m%d') + '_'
+            filename = fs.save(current_time + attachment.name, attachment)
+            size = attachment.size
             is_img = False
             is_pdf = False
 
             if 'image' in attachment.content_type:
+                # if attachment.size > 500000:  # 500KB 보다 크면 용량 줄이기
+                os.chdir(fs.location)
+                image = Image.open(filename)
+                image.save(filename, quailty=50)
+                size = len(Image.open(filename).fp.read())
                 is_img = True
 
             if 'pdf' in attachment.content_type:
@@ -137,7 +144,7 @@ class DocumentServices:
                 invoice=invoice,
                 document=document,
                 title=filename,
-                size=attachment.size,
+                size=size,
                 path='attachment/' + filename,
                 isImg=is_img,
                 isPdf=is_pdf
