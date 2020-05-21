@@ -132,8 +132,12 @@ class EaTest(InitData, TestCase):
     """
     사용자 결재 상신 시 사용되는 Model(Document, Attachment, Sign) 테스트
     """
-    FIRST_BATCH_NUMBER = 7129
-    SECOND_BATCH_NUMBER = 7227
+    FIRST_BATCH_NUMBER = 8470
+    SECOND_BATCH_NUMBER = 8477
+
+    def tearDown(self) -> None:
+        service = OracleService()
+        service.execute_delete_query('kcfeed.eabatno', self.SECOND_BATCH_NUMBER)
 
     def setUp(self) -> None:
         self.position_create()
@@ -278,12 +282,12 @@ class EaTest(InitData, TestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_get_defaultUsers_view(self):
-        response: Response = self.drf_client.get(f'/ea/get_defaultUsers/{self.user.username}/채무발생')
+        response: Response = self.drf_client.get(f'/ea/get_defaultUsers/채무발생')
         self.assertGreaterEqual(len(response.data), 3)
         self.assertEqual(response.status_code, 200)
 
     def test_get_departmentUsers_view(self):
-        response: Response = self.drf_client.get('/ea/get_departmentUsers/' + self.user.employee.department.name)
+        response: Response = self.drf_client.get('/ea/get_departmentUsers/')
         self.assertGreaterEqual(len(response.data), 3)
         self.assertEqual(response.status_code, 200)
 
@@ -294,22 +298,22 @@ class EaTest(InitData, TestCase):
 
     def test_written_document_view(self):
         data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
-        response: Response = self.drf_client.get('/ea/written_document/' + self.user.username, data=data)
+        response: Response = self.drf_client.get('/ea/written_document/', data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_approved_document_view(self):
         data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
-        response: Response = self.drf_client.get('/ea/approved_document/' + self.user.username, data=data)
+        response: Response = self.drf_client.get('/ea/approved_document/', data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_rejected_document_view(self):
         data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
-        response: Response = self.drf_client.get('/ea/rejected_document/' + self.user.username, data=data)
+        response: Response = self.drf_client.get('/ea/rejected_document/', data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_sign_document_view(self):
         data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
-        response: Response = self.drf_client.get('/ea/sign_document/' + self.user.username, data=data)
+        response: Response = self.drf_client.get('/ea/sign_document/', data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_approve_or_deny_sign_view(self):
