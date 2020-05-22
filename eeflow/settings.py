@@ -12,21 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!+!@7c0#&ng4pa)&y^+m%$m1z_((t*ua1^#skaj0rl1mna7xpg'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -91,6 +79,8 @@ WSGI_APPLICATION = 'eeflow.wsgi.application'
 
 # Database
 if 'SQL_ENGINE' in os.environ:
+    DEBUG=False
+    ALLOWED_HOSTS = ['.kcfeedpaperless.web.app', '.kcfamily.kr']
     DATABASES = {
         'default': {
             "ENGINE": os.environ.get("SQL_ENGINE", ""),
@@ -107,6 +97,8 @@ if 'SQL_ENGINE' in os.environ:
     ORACLE_IP = os.environ.get("ORACLE_IP", '')
 
 else:
+    DEBUG=True 
+    ALLOWED_HOSTS = ['*']
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -115,8 +107,6 @@ else:
     }
     ORACLE_IP = '155.1.19.32'
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {

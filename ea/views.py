@@ -76,6 +76,7 @@ def create_document(request: Request):
     batch_number: int = request.data.get('batch_number')
     document_type: str = request.data.get('document_type')
     approvers: str = request.data.get('approvers')
+    print(request.data)
     approvers: Approvers = json.loads(approvers)
     attachments_files: list = request.FILES.getlist('files')
     attachments_counts: list = request.POST.getlist('counts')
