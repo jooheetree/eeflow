@@ -24,6 +24,7 @@ services:
       dockerfile: Dockerfile
     volumes:
           - static_vol:/code/static/
+          - ./media:/code/media/
     ports:
           - 80:80
     depends_on:
