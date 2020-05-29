@@ -76,7 +76,6 @@ def create_document(request: Request):
     batch_number: int = request.data.get('batch_number')
     document_type: str = request.data.get('document_type')
     approvers: str = request.data.get('approvers')
-    print(request.data)
     approvers: Approvers = json.loads(approvers)
     attachments_files: list = request.FILES.getlist('files')
     attachments_counts: list = request.POST.getlist('counts')
@@ -156,6 +155,14 @@ def written_document(request: Request):
     documents = filter_document(documents, search, batch_number, user, department)
 
     serializer = DocumentSerializer(documents, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def document(request: Request):
+    document_id: date = request.query_params.get('document_id')
+    document: Document = Document.objects.get(id=document_id)
+    serializer = DocumentSerializer(document)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

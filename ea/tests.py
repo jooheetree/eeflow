@@ -132,8 +132,8 @@ class EaTest(InitData, TestCase):
     """
     사용자 결재 상신 시 사용되는 Model(Document, Attachment, Sign) 테스트
     """
-    FIRST_BATCH_NUMBER = 8470
-    SECOND_BATCH_NUMBER = 8477
+    FIRST_BATCH_NUMBER = 9002
+    SECOND_BATCH_NUMBER = 9003
 
     def tearDown(self) -> None:
         service = OracleService()
@@ -304,6 +304,11 @@ class EaTest(InitData, TestCase):
     def test_approved_document_view(self):
         data = {'startDate': '2020-01-20', 'endDate': '2020-01-20'}
         response: Response = self.drf_client.get('/ea/approved_document/', data=data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_document_view(self):
+        data = {'document_id': 1}
+        response: Response = self.drf_client.get('/ea/document/', data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_rejected_document_view(self):
