@@ -94,7 +94,7 @@ class DocumentServices:
             self.create_sign(user, i, document, approver.get('type'))
             self.create_defaulsignlist(author, user.employee, approver.get('type'), i, document.document_type)
 
-        self.send_push(document)
+        # self.send_push(document)
 
     def create_document(self, title: str, auhor: User, approvers: Approvers,
                         batch_number: int, document_type: str) -> Document:

@@ -411,8 +411,8 @@ class Sign(TimeStampedModel):
     def notify_next_user(self, content: str) -> None:
         self.stand_by()
         self.save()
-        for push in self.user.push_data.all():
-            push.send_push(content)
+        # for push in self.user.push_data.all():
+        #     push.send_push(content)
 
     def approve_sign(self, comment: str) -> None:
         self.approve()
