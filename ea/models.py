@@ -2,6 +2,9 @@ from django.contrib.auth.models import User, Group
 from django.db import models
 from typing import Union
 
+from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from pywebpush import webpush, WebPushException
 
 from django.conf import settings
@@ -460,3 +463,19 @@ class DefaulSignList(TimeStampedModel):
 
     def __str__(self):
         return f'{self.user.first_name}_{self.approver.user.first_name}/{self.order}번째'
+
+
+@receiver(post_save, sender=Sign)
+def send_push_after_create(sender, instance: Sign, created, **kwargs):
+    print(sender, instance.result, created, kwargs)
+    # if created and instance.result == 0:
+    #     for push in instance.user.push_data.all():
+    #         push.send_push(f'[결재] {instance.document.title}')
+    #     return
+
+    if instance.result == 0:
+        print('success')
+        for push in instance.user.push_data.all():
+            push.send_push(f'[결재] {instance.document.title}')
+
+    return
