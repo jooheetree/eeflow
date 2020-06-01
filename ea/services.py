@@ -134,6 +134,7 @@ class DocumentServices:
                 os.chdir(fs.location)
                 image = Image.open(filename)
                 image.save(filename, quailty=50)
+                #os.chmod(filename, 0o777)
                 size = len(Image.open(filename).fp.read())
                 is_img = True
 
