@@ -106,6 +106,15 @@ class Document(TimeStampedModel):
     batch_number = models.PositiveIntegerField()
 
     def finish_deny(self, push_content: str) -> None:
+        """
+        작성자에게 결재완료 notify
+        for push in self.author.push_data.all():
+            push.send_push(push_content)
+
+        crontab으로 대체 하지 않음
+        :param content:
+        :return None:
+        """
         self.doc_status = '2'
         self.save()
 
@@ -113,11 +122,17 @@ class Document(TimeStampedModel):
             push.send_push(push_content)
 
     def finish_approve(self, push_content: str) -> None:
-        self.doc_status = '3'
-        self.save()
-
+        """
+        작성자에게 결재완료 notify
         for push in self.author.push_data.all():
             push.send_push(push_content)
+
+        기능 OFF
+        :param content:
+        :return None:
+        """
+        self.doc_status = '3'
+        self.save()
 
     def __str__(self):
         return f'{self.title}({self.author.first_name})'
@@ -409,10 +424,17 @@ class Sign(TimeStampedModel):
         self.result = '3'
 
     def notify_next_user(self, content: str) -> None:
-        self.stand_by()
-        self.save()
+        """
+        다음대기 user notify Code
         # for push in self.user.push_data.all():
         #     push.send_push(content)
+
+        crontab으로 대체
+        :param content:
+        :return None:
+        """
+        self.stand_by()
+        self.save()
 
     def approve_sign(self, comment: str) -> None:
         self.approve()
@@ -421,7 +443,7 @@ class Sign(TimeStampedModel):
             self.comment = comment
         self.save()
 
-        next_sign = self.get_next_sign()
+        next_sign: Sign = self.get_next_sign()
 
         if next_sign:
             next_sign.notify_next_user(f'[결재요청] {self.document.title}')

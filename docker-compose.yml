@@ -9,7 +9,7 @@ services:
       context: ./
       dockerfile: Dockerfile
 
-    command: gunicorn --workers=5 eeflow.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn --workers=3 eeflow.wsgi:application --bind 0.0.0.0:8000
     volumes:
            - static_vol:/code/static/
            - .:/code/
