@@ -86,7 +86,7 @@ class OracleService:
                 f"sum(nvl(cnt4,0)) cnt4,sum(nvl(cnt5,0)) cnt5 \
                 from \
                      (select decode(no,'1',cnt) cnt1,decode(no,'2',cnt) cnt2,decode(no,'3',cnt) cnt3,decode(no,'4',cnt)" \
-                        f" cnt4,decode(no,'5',cnt) cnt5 \
+                f" cnt4,decode(no,'5',cnt) cnt5 \
                       from \
                            ( \
                             select '1' no,a.rptorg,count(*) cnt \
@@ -115,18 +115,22 @@ class OracleService:
                                     and    rptorg in ({users}) \
                                     and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = rpicu) \
                                     and    not exists(select glicu from proddta.f0911 where glicu = rpicu " \
-                                    f"and glpdct = '  ' and gldcto = 'SO' " \
-                                    f"and gldgj >= (to_number(to_char(sysdate,'yyddd')) + 100000) -30)) a \
+                f"and glpdct = '  ' and gldcto = 'SO' " \
+                f"and gldgj >= (to_number(to_char(sysdate,'yyddd')) + 100000) -30)) a \
                              group  by rptorg \
                              union all \
-                             select '4' no,a.rztorg rptorg,count(*) cnt \
-                             from \
-                                    (select distinct rztorg,rzicu \
-                                     from   proddta.f03b14 \
-                                     where  rzpost <> 'D' \
-                                     and    rztorg in ({users})\
-                                     and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = rzicu)) a \
-                             group  by rztorg \
+                                select '4' no,a.rztorg rptorg,count(*) cnt \
+                                from \
+                                (select distinct rztorg, rzicu \
+                                from proddta.f03b14 \
+                                where  rzpost <> 'D' \
+                                and rztorg in ({users}) \
+                                and not exists(select batno from kcfeed.eabatno kkk where kkk.batno = rzicu) \
+                                and rzicu not in (select distinct rzicu from proddta.f03b14 where rzaid = '00000055') \
+                                and lpad(rzan8, 6, '0') | | rzaid not in (select lpad(aban8, '0', 6) | | '00000012' \
+                                from proddta.f0101 where \
+                                abat1 = 'C' and abmcu >= '       13310' and abmcu <= '       14250')) a \
+                                group by rztorg \
                              union all \
                              select '5' no,a.gltorg rptorg,count(*) cnt \
                              from \
