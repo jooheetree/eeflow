@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -16,13 +17,21 @@ def create_department_users(department: Department) -> str:
     return user_str
 
 
-@api_view(['GET'])
-def voucher_list(request: Request):
+def create_params(request: Request) -> tuple:
     start_date: str = create_date_str(request.query_params.get('startDate'))
     end_date: str = create_date_str(request.query_params.get('endDate'))
     search: str = request.query_params.get('search')
+    batch_number: str = request.query_params.get('batchNumber')
+    author: str = request.query_params.get('user')
+    deaprtment: str = request.query_params.get('department')
     user_str: str = create_department_users(request.user.employee.department)
 
+    return start_date, end_date, search, batch_number, author, user_str
+
+
+@api_view(['GET'])
+def voucher_list(request: Request):
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
     columns = [
         {'ids': 'id'},
         {'RPCO': 'RPCO'},
@@ -61,6 +70,19 @@ def voucher_list(request: Request):
     if not request.user.is_superuser:
         wheres.append(user_where)
 
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
+
     if search:
         wheres.append(f" RPRMK like '%{search}%'")
 
@@ -72,10 +94,7 @@ def voucher_list(request: Request):
 
 @api_view(['GET'])
 def payment_list(request: Request):
-    start_date: str = create_date_str(request.query_params.get('startDate'))
-    end_date: str = create_date_str(request.query_params.get('endDate'))
-    search: str = request.query_params.get('search')
-    user_str: str = create_department_users(request.user.employee.department)
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
 
     columns = [
         {'ids': 'id'},
@@ -116,6 +135,19 @@ def payment_list(request: Request):
     if not request.user.is_superuser:
         wheres.append(user_where)
 
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
+
     if search:
         wheres.append(f" RPRMK like '%{search}%'")
 
@@ -127,10 +159,7 @@ def payment_list(request: Request):
 
 @api_view(['GET'])
 def invoice_list(request: Request):
-    start_date: str = create_date_str(request.query_params.get('startDate'))
-    end_date: str = create_date_str(request.query_params.get('endDate'))
-    search: str = request.query_params.get('search')
-    user_str: str = create_department_users(request.user.employee.department)
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
 
     columns = [
         {'ids': 'id'},
@@ -169,9 +198,21 @@ def invoice_list(request: Request):
     if not request.user.is_superuser:
         wheres.append(user_where)
 
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
+
     if search:
         wheres.append(f" RPRMK like '%{search}%'")
-
     service = OracleService()
     query = service.create_select_query(columns, table, wheres)
     result = service.get_result(query, columns)
@@ -180,10 +221,7 @@ def invoice_list(request: Request):
 
 @api_view(['GET'])
 def receipt_list(request: Request):
-    start_date: str = create_date_str(request.query_params.get('startDate'))
-    end_date: str = create_date_str(request.query_params.get('endDate'))
-    search: str = request.query_params.get('search')
-    user_str: str = create_department_users(request.user.employee.department)
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
 
     columns = [
         {'ids': 'id'},
@@ -225,6 +263,19 @@ def receipt_list(request: Request):
     if not request.user.is_superuser:
         wheres.append(user_where)
 
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
+
     if search:
         wheres.append(f" RPRMK like '%{search}%'")
 
@@ -236,10 +287,7 @@ def receipt_list(request: Request):
 
 @api_view(['GET'])
 def nacct_list(request: Request):
-    start_date: str = create_date_str(request.query_params.get('startDate'))
-    end_date: str = create_date_str(request.query_params.get('endDate'))
-    search: str = request.query_params.get('search')
-    user_str: str = create_department_users(request.user.employee.department)
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
 
     columns = [
         {'ids': 'id'},
@@ -277,6 +325,19 @@ def nacct_list(request: Request):
 
     if not request.user.is_superuser:
         wheres.append(user_where)
+
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
 
     if search:
         wheres.append(f" RPRMK like '%{search}%'")
