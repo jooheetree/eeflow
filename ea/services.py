@@ -123,8 +123,8 @@ class DocumentServices:
     def create_attachments(self, attachments: list, invoice: Invoice, document: Document) -> None:
         for attachment in attachments:
             fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
-            current_time = datetime.now().strftime('%Y%m%d') + '_'
-            filename = fs.save(current_time + attachment.name, attachment)
+            # current_time = datetime.now().strftime('%Y%m%d') + '_'
+            filename = fs.save(attachment.name, attachment)
             size = attachment.size
             is_img = False
             is_pdf = False
