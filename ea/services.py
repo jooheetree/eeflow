@@ -123,19 +123,17 @@ class DocumentServices:
     def create_attachments(self, attachments: list, invoice: Invoice, document: Document) -> None:
         for attachment in attachments:
             fs = FileSystemStorage(location=settings.MEDIA_ROOT + '/attachment/')
-            # current_time = datetime.now().strftime('%Y%m%d') + '_'
             filename = fs.save(attachment.name, attachment)
             size = attachment.size
             is_img = False
             is_pdf = False
 
             if 'image' in attachment.content_type:
-                # if attachment.size > 500000:  # 500KB 보다 크면 용량 줄이기
-                os.chdir(fs.location)
-                image = Image.open(filename)
-                image.save(filename, quailty=50)
-                #os.chmod(filename, 0o777)
-                size = len(Image.open(filename).fp.read())
+                if attachment.size > 3000000:  # 3MB 보다 크면 용량 줄이기
+                    os.chdir(fs.location)
+                    image = Image.open(filename)
+                    image.save(filename, quailty=50)
+                    size = len(Image.open(filename).fp.read())
                 is_img = True
 
             if 'pdf' in attachment.content_type:
