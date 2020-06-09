@@ -316,7 +316,10 @@ def nacct_list(request: Request):
         {'RPSBLT': 'RPSBLT'},
         {'RPDL03': 'RPDL03'},
         {'RPCODE': 'RPCODE'},
-        {'RPNAME': 'RPNAME'}
+        {'RPNAME': 'RPNAME'},
+        # another
+        {'RPEXR': 'RPEXR'},
+
     ]
     table = 'vga_nacct1'
     user_where = f" RPTORG in ({user_str})"
