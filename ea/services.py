@@ -129,7 +129,7 @@ class DocumentServices:
             is_pdf = False
 
             if 'image' in attachment.content_type:
-                if attachment.size > 3000000:  # 3MB 보다 크면 용량 줄이기
+                if attachment.size > 2000000:  # 3MB 보다 크면 용량 줄이기
                     os.chdir(fs.location)
                     image = Image.open(filename)
                     image.save(filename, quailty=50)

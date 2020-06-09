@@ -115,7 +115,6 @@ def get_defaultUsers(request: Request, document_type: str):
 
 @api_view(['GET'])
 def get_departmentUsers(request: Request):
-
     # department = Department.objects.get(name=department_name)
     employees = Employee.objects.filter(department=request.user.employee.department)
     serializer = SignUsersSerializer(employees, many=True)
@@ -218,14 +217,14 @@ def sign_document(request: Request):
     user: str = request.query_params.get('user', '')
     department: str = request.query_params.get('department', '')
 
-    documents: QuerySet = Document.objects.filter(
+    documents = Document.objects.filter(
         Q(signs__result=0),
         Q(signs__user__username=request.user),
         Q(created__range=(datetime.combine(start_date, time.min),
                           datetime.combine(end_date, time.max))))
 
     if search:
-        documents = documents.filter(title__contains=search)
+        documents = documents.filter(Q(title__contains=search) | Q(author__first_name__contains=search))
 
     documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
     documents = documents.annotate(invoices_count=Case(
@@ -236,36 +235,6 @@ def sign_document(request: Request):
     ))
     serializer = DocumentSerializer(documents, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
-#
-#
-# @api_view(['GET'])
-# def sign_document(request: Request, username: str):
-#     start_date: date = create_date(request.query_params.get('startDate'))
-#     end_date: date = create_date(request.query_params.get('endDate'))
-#
-#     search: str = request.query_params.get('search', '')
-#     batch_number: str = request.query_params.get('batchNumber', '')
-#     user: str = request.query_params.get('user', '')
-#     department: str = request.query_params.get('department', '')
-#
-#     documents: QuerySet = Document.objects.filter(
-#         Q(signs__result=0),
-#         Q(signs__user__username=username),
-#         Q(created__range=(datetime.combine(start_date, time.min),
-#                           datetime.combine(end_date, time.max))))
-#
-#     if search:
-#         documents = documents.filter(title__contains=search)
-#
-#     documents = documents.annotate(price=(Sum('invoices__RPZ5DEBITAT') + Sum('invoices__RPZ5CREDITAT')) / 2)
-#     documents = documents.annotate(invoices_count=Case(
-#         When(document_type='0', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
-#         When(document_type='2', then=Count('invoices', filter=Q(invoices__RPSEQ=1, invoices__RPSFX='001'))),
-#         When(document_type='3', then=Count('invoices__RPCKNU', distinct=True)),
-#         default=Count('invoices', filter=Q(invoices__RPSEQ=1))
-#     ))
-#     serializer = DocumentSerializer(documents, many=True)
-#     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
