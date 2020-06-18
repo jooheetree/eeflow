@@ -78,9 +78,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eeflow.wsgi.application'
 
 # Database
+#    ALLOWED_HOSTS = ['.kcfeedpaperless.web.app', '.kcfamily.kr']
 if 'SQL_ENGINE' in os.environ:
     DEBUG=False
-    ALLOWED_HOSTS = ['.kcfeedpaperless.web.app', '.kcfamily.kr']
+    ALLOWED_HOSTS = ['*']
     DATABASES = {
         'default': {
             "ENGINE": os.environ.get("SQL_ENGINE", ""),
