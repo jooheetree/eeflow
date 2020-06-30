@@ -62,10 +62,10 @@ def voucher_list(request: Request):
         {'RPCODE': 'RPCODE'},
         {'RPNAME': 'RPNAME'}
     ]
-    table = 'vap_voucher1'
+    table = 'EA_AP_Voucher'
     user_where = f" RPTORG in ({user_str})"
-    wheres = [f" rpdgj >= TO_DATE({start_date}, 'YYYYMMDD')",
-              f" rpdgj <= TO_DATE({end_date}, 'YYYYMMDD')"]
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
 
     if not request.user.is_superuser:
         wheres.append(user_where)
@@ -127,10 +127,10 @@ def payment_list(request: Request):
         # another
         {'RPDOCM': 'RPDOCM'}
     ]
-    table = 'vap_payment1'
+    table = 'EA_AP_Payment'
     user_where = f" RPTORG in ({user_str})"
-    wheres = [f" rpdgj >= TO_DATE({start_date}, 'YYYYMMDD')",
-              f" rpdgj <= TO_DATE({end_date}, 'YYYYMMDD')"]
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
 
     if not request.user.is_superuser:
         wheres.append(user_where)
@@ -190,10 +190,10 @@ def invoice_list(request: Request):
         {'RPCODE': 'RPCODE'},
         {'RPNAME': 'RPNAME'}
     ]
-    table = 'var_invoice1'
+    table = 'EA_AR_Invoice'
     user_where = f" RPTORG in ({user_str})"
-    wheres = [f" rpdgj >= TO_DATE({start_date}, 'YYYYMMDD')",
-              f" rpdgj <= TO_DATE({end_date}, 'YYYYMMDD')"]
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
 
     if not request.user.is_superuser:
         wheres.append(user_where)
@@ -255,10 +255,10 @@ def receipt_list(request: Request):
         {'RPPYID': 'RPPYID'},
         {'RPCKNU': 'RPCKNU'}
     ]
-    table = 'var_receipt1'
+    table = 'EA_AR_Receipt'
     user_where = f" RPTORG in ({user_str})"
-    wheres = [f" rpdgj >= TO_DATE({start_date}, 'YYYYMMDD')",
-              f" rpdgj <= TO_DATE({end_date}, 'YYYYMMDD')"]
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
 
     if not request.user.is_superuser:
         wheres.append(user_where)
@@ -323,8 +323,8 @@ def nacct_list(request: Request):
     ]
     table = 'vga_nacct1'
     user_where = f" RPTORG in ({user_str})"
-    wheres = [f" rpdgj >= TO_DATE({start_date}, 'YYYYMMDD')",
-              f" rpdgj <= TO_DATE({end_date}, 'YYYYMMDD')"]
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
 
     if not request.user.is_superuser:
         wheres.append(user_where)
