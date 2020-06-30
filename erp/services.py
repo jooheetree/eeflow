@@ -14,7 +14,7 @@ class OracleService:
 
     def init_env(self) -> Connection:
         os.environ["NLS_LANG"] = ".AL32UTF8"
-        dsn_tns = cx_Oracle.makedsn(ORACLE_IP, '1521', service_name='infacjde')
+        dsn_tns = cx_Oracle.makedsn(ORACLE_IP, '1521', service_name='ENT')
         return cx_Oracle.connect(user=r'PRODDTA', password='PRODDTA', dsn=dsn_tns)
 
     def get_result(self, query: str, columns: list) -> list:
@@ -95,7 +95,7 @@ class OracleService:
                                     from   proddta.f0411 \
                                     where  rppost <> 'D' \
                                     and    rptorg in ({users}) \
-                                    and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = rpicu)) a \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)) a \
                             group  by rptorg \
                             union all \
                             select '2' no,a.rmtorg rptorg,count(*) cnt \
@@ -104,7 +104,7 @@ class OracleService:
                                     from   proddta.f0413 \
                                     where  rmistp <> 'D' \
                                     and    rmtorg in ({users}) \
-                                    and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = rmicu)) a \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = rmicu)) a \
                             group  by rmtorg \
                             union all \
                             select '3' no,a.rptorg,nvl(count(*),0) cnt \
@@ -113,7 +113,7 @@ class OracleService:
                                     from   proddta.f03b11 \
                                     where  rppost <> 'D' \
                                     and    rptorg in ({users}) \
-                                    and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = rpicu) \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = rpicu) \
                                     and    not exists(select glicu from proddta.f0911 where glicu = rpicu " \
                 f"and glpdct = '  ' and gldcto = 'SO' " \
                 f"and gldgj >= (to_number(to_char(sysdate,'yyddd')) + 100000) -30)) a \
@@ -125,7 +125,7 @@ class OracleService:
                                 from proddta.f03b14 \
                                 where  rzpost <> 'D' \
                                 and rztorg in ({users}) \
-                                and not exists(select batno from kcfeed.eabatno kkk where kkk.batno = rzicu) \
+                                and not exists(select batno from eabatno kkk where kkk.batno = rzicu) \
                                 and rzicu not in (select distinct rzicu from proddta.f03b14 where rzaid = '00000055') \
                                 and lpad(rzan8, 6, '0') | | rzaid not in (select lpad(aban8, '0', 6) | | '00000012' \
                                 from proddta.f0101 where \
@@ -140,7 +140,7 @@ class OracleService:
                                      and    gllt = 'AA' \
                                      and    glicut = 'G' \
                                      and    gltorg in ({users}) \
-                                     and    not exists (select batno from kcfeed.eabatno kkk where kkk.batno = glicu)) a \
+                                     and    not exists (select batno from eabatno kkk where kkk.batno = glicu)) a \
                              group  by gltorg \
                             ) a \
                         )b "
