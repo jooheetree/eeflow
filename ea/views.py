@@ -94,7 +94,7 @@ def create_document(request: Request):
                      author=author)
 
     service = OracleService()
-    service.execute_insert_query('kcfeed.eabatno',
+    service.execute_insert_query('eabatno',
                                  ['BATNO', 'BATDT'], [batch_number, datetime.now().strftime("%Y%m%d")])
 
     return Response(status=status.HTTP_201_CREATED)
