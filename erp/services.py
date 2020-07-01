@@ -14,7 +14,7 @@ class OracleService:
 
     def init_env(self) -> Connection:
         os.environ["NLS_LANG"] = ".AL32UTF8"
-        dsn_tns = cx_Oracle.makedsn(ORACLE_IP, '1521', service_name='ENT')
+        dsn_tns = cx_Oracle.makedsn(ORACLE_IP, '1521', service_name='infacjde')
         return cx_Oracle.connect(user=r'PRODDTA', password='PRODDTA', dsn=dsn_tns)
 
     def get_result(self, query: str, columns: list) -> list:
