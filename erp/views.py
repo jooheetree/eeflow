@@ -358,3 +358,67 @@ def get_todo_count(request: Request):
     service = OracleService()
     result = service.get_erp_invoices_todo_count(user_str)
     return Response(data=result, status=status.HTTP_200_OK)
+
+    
+@api_view(['GET'])
+def voucher_list_group(request: Request):
+    start_date, end_date, search, batch_number, author, user_str = create_params(request)
+    columns = [
+        {'ids': 'id'},
+        {'RPCO': 'RPCO'},
+        {'RPICU': 'RPICU'},
+        {'RPDGJ': 'RPDGJ'},
+        {'RPALPH': 'RPALPH'},
+        {'RPDL02': 'RPDL02'},
+        {'RPRMK': 'RPRMK'},
+        {'RPTORG': 'RPTORG'},
+        {'RPSEQ': 'RPSEQ'},
+        {'RPDCT': 'RPDCT'},
+        {'RPDL02': 'RPDL02'},
+        {'RPEXR1': 'RPEXR1'},
+        {'RPTXA1': 'RPTXA1'},
+        {'RPDOC': 'RPDOC'},
+        {'RPTAX': 'RPTAX'},
+        {'RPALPH': 'RPALPH'},
+        {'RPSFX': 'RPSFX'},
+        {'RPZ5DEBITAT / 100': 'RPZ5DEBITAT'},
+        {'RPZ5CREDITAT / 100': 'RPZ5CREDITAT'},
+        {'RPAN8': 'RPAN8'},
+        {'RPTORG': 'RPTORG'},
+        {'RPDSVJ': 'RPDSVJ'},
+        {'RPEXR1NM': 'RPEXR1NM'},
+        {'RPDDJ': 'RPDDJ'},
+        {'RPSBLT': 'RPSBLT'},
+        {'RPDL03': 'RPDL03'},
+        {'RPCODE': 'RPCODE'},
+        {'RPNAME': 'RPNAME'}
+    ]
+    table = 'EA_AP_Voucher_g'
+    user_where = f" RPTORG in ({user_str})"
+    wheres = [f" rpdgj1 >= TO_CHAR( TO_DATE({start_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000",
+              f" rpdgj1 <= TO_CHAR( TO_DATE({end_date}, 'YYYYMMDD'), 'YYYYDDD')-1900000"]
+
+    if not request.user.is_superuser:
+        wheres.append(user_where)
+
+    if author:
+        users: QuerySet = User.objects.filter(first_name=author)
+
+        if not users:
+            return Response(data=[], status=status.HTTP_200_OK)
+
+        usernames: list = list(map(lambda user: user.username.upper(), users))
+        user_str: str = ", ".join("'{0}'".format(username) for username in usernames)
+        wheres.append(f" RPTORG in ({user_str})")
+
+    if batch_number:
+        wheres.append(f" RPICU = {batch_number}")
+
+    if search:
+        wheres.append(f" RPRMK like '%{search}%'")
+
+    service = OracleService()
+    query = service.create_select_query(columns, table, wheres)
+    result = service.get_result(query, columns)
+    return Response(data=result, status=status.HTTP_200_OK)
+
