@@ -112,7 +112,7 @@ class OracleService:
                             from \
                                    (select distinct rptorg,rpicu \
                                     from   proddta.f03b11 \
-                                    where  rppost <> 'D' \
+                                    where  rppost = ' '\
                                     and    rptorg in ({users}) \
                                     and    not exists (select batno from eabatno kkk where kkk.batno = rpicu) \
                                     and    not exists(select glicu from proddta.f0911 where glicu = rpicu " \
@@ -124,13 +124,14 @@ class OracleService:
                                 from \
                                 (select distinct rztorg, rzicu \
                                 from proddta.f03b14 \
-                                where  rzpost <> 'D' \
+                                where  rzpost = ' ' \
                                 and rztorg in ({users}) \
                                 and not exists(select batno from eabatno kkk where kkk.batno = rzicu) \
-                                and rzicu not in (select distinct rzicu from proddta.f03b14 where rzaid = '00000055') \
+                                /*and rzicu not in (select distinct rzicu from proddta.f03b14 where rzaid = '00000055') \
                                 and lpad(rzan8, 6, '0') | | rzaid not in (select lpad(aban8, '0', 6) | | '00000012' \
                                 from proddta.f0101 where \
-                                abat1 = 'C' and abmcu >= '       13310' and abmcu <= '       14250')) a \
+                                abat1 = 'C' and abmcu >= '       13310' and abmcu <= '       14250') */ \
+                                ) a \
                                 group by rztorg \
                              union all \
                              select '5' no,a.gltorg rptorg,count(*) cnt \
