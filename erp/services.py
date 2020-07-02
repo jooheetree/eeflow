@@ -104,7 +104,7 @@ class OracleService:
                                     (select distinct rptorg,rpicu   \
                                     from   ea_ap_payment\
                                     where  1=1\
-                                    and    rmtorg in ({users}) \
+                                    and    rptorg in ({users}) \
                                     and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)) a \
                             group  by rptorg \
                             union all \
@@ -124,20 +124,19 @@ class OracleService:
                                     (select distinct rptorg, rpicu \
                                     from ea_ar_receipt \
                                     where  1=1 \
-                                    and rztorg in ({users}) \
+                                    and rptorg in ({users}) \
                                     and not exists(select batno from eabatno kkk where kkk.batno = rpicu)  \
                                     ) a \
                             group by rptorg \
                             union all \
                             select '5' no,a.gltorg rptorg,count(*) cnt \
                             from \
-                                    (select distinct gltorg,glicu \
-                                    from   proddta.f0911 \
-                                    where  glpost <> 'P' \
-                                    and    gllt = 'AA' \
-                                    and    glicut = 'G' \
-                                    and    gltorg in ({users}) \
-                                    and    not exists (select batno from eabatno kkk where kkk.batno = glicu)) a \
+                                    (select distinct rptorg, rpicu \
+                                    from   ea_gl_batch \
+                                    where  1=1 \
+                                    and rptorg in ({users}) \
+                                    and not exists(select batno from eabatno kkk where kkk.batno = rpicu)  \
+                                    ) a \
                             group  by gltorg \
                             ) a \
                         )b "
