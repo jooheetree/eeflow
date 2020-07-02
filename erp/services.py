@@ -112,7 +112,7 @@ class OracleService:
                             from \
                                     (select distinct rptorg,rpicu \
                                     from   ea_ar_invoice\
-                                    where  1=1
+                                    where  1=1\
                                     and    rptorg in ({users}) \
                                     and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)  \
                                     ) a \
