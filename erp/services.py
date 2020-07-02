@@ -93,57 +93,52 @@ class OracleService:
                             select '1' no,a.rptorg,count(*) cnt \
                             from \
                                    (select distinct rptorg,rpicu \
-                                    from   proddta.f0411 \
-                                    where  rppost <> 'D' \
+                                    from   ea_ap_voucher \
+                                    where  1=1 \
                                     and    rptorg in ({users}) \
                                     and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)) a \
                             group  by rptorg \
                             union all \
-                            select '2' no,a.rmtorg rptorg,count(*) cnt \
+                            select '2' no,a.rptorg,count(*) cnt \
                             from \
-                                   (select distinct rmtorg,rmicu \
-                                    from   proddta.f0413 \
-                                    where  rmistp <> 'D' \
+                                    (select distinct rptorg,rpicu   \
+                                    from   ea_ap_payment\
+                                    where  1=1\
                                     and    rmtorg in ({users}) \
-                                    and    not exists (select batno from eabatno kkk where kkk.batno = rmicu)) a \
-                            group  by rmtorg \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)) a \
+                            group  by rptorg \
                             union all \
                             select '3' no,a.rptorg,nvl(count(*),0) cnt \
                             from \
-                                   (select distinct rptorg,rpicu \
-                                    from   proddta.f03b11 \
-                                    where  rppost = ' '\
+                                    (select distinct rptorg,rpicu \
+                                    from   ea_ar_invoice\
+                                    where  1=1
                                     and    rptorg in ({users}) \
-                                    and    not exists (select batno from eabatno kkk where kkk.batno = rpicu) \
-                                    and    not exists(select glicu from proddta.f0911 where glicu = rpicu " \
-                f"and glpdct = '  ' and gldcto = 'SO' " \
-                f"and gldgj >= (to_number(to_char(sysdate,'yyddd')) + 100000) -30)) a \
-                             group  by rptorg \
-                             union all \
-                                select '4' no,a.rztorg rptorg,count(*) cnt \
-                                from \
-                                (select distinct rztorg, rzicu \
-                                from proddta.f03b14 \
-                                where  rzpost = ' ' \
-                                and rztorg in ({users}) \
-                                and not exists(select batno from eabatno kkk where kkk.batno = rzicu) \
-                                /*and rzicu not in (select distinct rzicu from proddta.f03b14 where rzaid = '00000055') \
-                                and lpad(rzan8, 6, '0') | | rzaid not in (select lpad(aban8, '0', 6) | | '00000012' \
-                                from proddta.f0101 where \
-                                abat1 = 'C' and abmcu >= '       13310' and abmcu <= '       14250') */ \
-                                ) a \
-                                group by rztorg \
-                             union all \
-                             select '5' no,a.gltorg rptorg,count(*) cnt \
-                             from \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = rpicu)  \
+                                    ) a \
+                            group  by rptorg " \
+                        f" \
+                            union all \
+                            select '4' no,a.rptorg rptorg,count(*) cnt \
+                            from \
+                                    (select distinct rptorg, rpicu \
+                                    from ea_ar_receipt \
+                                    where  1=1 \
+                                    and rztorg in ({users}) \
+                                    and not exists(select batno from eabatno kkk where kkk.batno = rpicu)  \
+                                    ) a \
+                            group by rptorg \
+                            union all \
+                            select '5' no,a.gltorg rptorg,count(*) cnt \
+                            from \
                                     (select distinct gltorg,glicu \
-                                     from   proddta.f0911 \
-                                     where  glpost <> 'P' \
-                                     and    gllt = 'AA' \
-                                     and    glicut = 'G' \
-                                     and    gltorg in ({users}) \
-                                     and    not exists (select batno from eabatno kkk where kkk.batno = glicu)) a \
-                             group  by gltorg \
+                                    from   proddta.f0911 \
+                                    where  glpost <> 'P' \
+                                    and    gllt = 'AA' \
+                                    and    glicut = 'G' \
+                                    and    gltorg in ({users}) \
+                                    and    not exists (select batno from eabatno kkk where kkk.batno = glicu)) a \
+                            group  by gltorg \
                             ) a \
                         )b "
         self.cursor.execute(query)
