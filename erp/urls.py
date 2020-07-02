@@ -24,5 +24,5 @@ urlpatterns = [
     path('receipt_list/', receipt_list, name='receipt_list'),  # 채권정리
     path('nacct_list/', nacct_list, name='nacct_list'),  # 일반전표
     path('get_todo_count/', get_todo_count, name='get_todo_count'),  # 카운트
-    path('voucher_list_group/', voucher_list, name='voucher_list_group'),  # 채무발생
+    path('voucher_list_group/', voucher_list_group, name='voucher_list_group'),  # 채무발생_group
 ]
